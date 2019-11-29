@@ -1,11 +1,20 @@
 import "package:flutter/material.dart";
-import "src/app.dart";
-import 'package:flutter/services.dart';
+import "package:login_bloc/src/screens/app.dart";
+import 'package:login_bloc/src/screens/login_screen.dart';
+import 'package:login_bloc/src/screens/root_page.dart';
 
 void main() {
-  runApp(App());
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.blue, // navigation bar color
-    statusBarColor: Colors.pink, // status bar color
-  ));
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Impact',
+      home: Scaffold(
+        body: App(),
+      ),
+    );
+  }
 }

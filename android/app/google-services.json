@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "742744315390",
+    "firebase_url": "https://impact-flutter.firebaseio.com",
+    "project_id": "impact-flutter",
+    "storage_bucket": "impact-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:742744315390:android:15fb15d624093820d09caf",
+        "android_client_info": {
+          "package_name": "com.impact.login_bloc"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "742744315390-a68nrne3c2rsf4c5s5v61ctrcg3id3ip.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBywEOhZhkLYo1_G4A90rRc2X7upWfyASU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "742744315390-a68nrne3c2rsf4c5s5v61ctrcg3id3ip.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,3 +1,3 @@
 # Impact
 
-Climate change tracking app built with flutter
+Climate change tracking app built with flutter.
