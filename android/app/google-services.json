@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1055394701804",
+    "firebase_url": "https://impact-program.firebaseio.com",
+    "project_id": "impact-program",
+    "storage_bucket": "impact-program.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1055394701804:android:6f71dbd5b412adeb16e0c9",
+        "android_client_info": {
+          "package_name": "com.robinojw.impact"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1055394701804-ch1alrpojv4u5ma8j2hoiatm49626bdc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAX_Uy8iwvu0ZcCmOFtXwww-yxIHPzw7MU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1055394701804-ch1alrpojv4u5ma8j2hoiatm49626bdc.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1055394701804-3vilo1bdkquqr5a8odprb3fmp4rj3kh7.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.robinojw.impact"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
