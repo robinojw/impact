@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:impact/models/impactUser.dart';
 
 class DatabaseService {
   final String uid;
@@ -18,5 +19,24 @@ class DatabaseService {
       'commute': commute,
       'city': city,
     });
+  }
+
+  //Users from snapshot
+  List<ImpactUser> _userListFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return ImpactUser(
+        name: doc.data['name'] ?? '',
+        energy: doc.data['energy'] ?? '',
+        vehicle: doc.data['vehicle'] ?? '',
+        vehicleMpg: doc.data['vehicleMpg'] ?? 0,
+        commute: doc.data['commute'] ?? '',
+        city: doc.data['city'] ?? '',
+      );
+    }).toList();
+  }
+
+  //Get users stream
+  Stream<List<ImpactUser>> get users {
+    return usersCollection.snapshots().map(_userListFromSnapshot);
   }
 }

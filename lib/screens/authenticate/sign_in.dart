@@ -176,12 +176,12 @@ class _SignInState extends State<SignIn> {
                                   if (_formKey.currentState.validate()) {
                                     setState(() => loading = true);
                                     dynamic result =
-                                        await _auth.SignInWithEmailAndPassword(
+                                        await _auth.signInWithEmailAndPassword(
                                             email, password);
                                     if (result == null) {
-                                      setState(() => loading = false);
                                       setState(() => error =
                                           'This account doesn\'t exist');
+                                      setState(() => loading = false);
                                     }
                                   }
                                 },
