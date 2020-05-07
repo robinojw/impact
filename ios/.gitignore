@@ -58,6 +58,7 @@ google-services.json
 **/doc/api/
 .dart_tool/
 .flutter-plugins
+android/app/google-services.json
 .packages
 .pub-cache/
 .pub/
