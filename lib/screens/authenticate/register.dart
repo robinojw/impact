@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:impact/screens/shared/constants.dart';
 import 'package:impact/screens/shared/loading.dart';
+import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:impact/services/auth.dart';
 
 class Register extends StatefulWidget {
@@ -14,11 +15,12 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
-
-  String email = '';
-  String password = '';
   String error = '';
   bool loading = false;
+
+  //Text field state
+  String email = '';
+  String password = '';
 
   @override
   Widget build(BuildContext context) {
@@ -91,10 +93,12 @@ class _RegisterState extends State<Register> {
                                   dynamic result =
                                       await _auth.registerWithEmailAndPassword(
                                           email, password);
+
                                   if (result == null) {
-                                    setState(() => loading = false);
-                                    setState(() =>
-                                        error = 'Please supply a valid email');
+                                    setState(() {
+                                      loading = false;
+                                      error = 'Please supply a valid email';
+                                    });
                                   }
                                 }
                               },

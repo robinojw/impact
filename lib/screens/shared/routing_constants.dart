@@ -1,0 +1,9 @@
+const String wrapper = '/';
+const String auth = 'auth';
+const String register = 'register';
+const String start = 'start';
+const String personal = 'personal';
+const String vehicle = 'vehicle';
+const String energy = 'energy';
+const String home = 'home';
+const String loading = 'loading';

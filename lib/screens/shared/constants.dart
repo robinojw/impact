@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 const textInputDecoration = InputDecoration(
     enabledBorder:
         UnderlineInputBorder(borderSide: BorderSide(color: Colors.white)),
-    hintStyle: TextStyle(color: Colors.white, fontSize: 14));
+    hintStyle: TextStyle(color: Colors.white, fontSize: 14),
+    contentPadding: EdgeInsets.all(0));
 
 const backgroundGradient = BoxDecoration(
     gradient: LinearGradient(

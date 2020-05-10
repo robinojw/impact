@@ -48,6 +48,12 @@ flutter:
     #  - images/a_dot_ham.jpeg
     - assets/background.png
     - assets/impact.svg
+    - assets/impact.gif
+    - assets/impact-white.png
+    - assets/background-large.jpg
+    - assets/personal-info.png
+    - assets/vehicle-info.png
+    - assets/energy-info.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

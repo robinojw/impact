@@ -32,8 +32,20 @@ class AuthService {
           email: email, password: password);
       FirebaseUser user = result.user;
 
-      await DatabaseService(uid: user.uid)
-          .updateUserData('name', 'energy', 'vehicle', 45, 'commute', 'city');
+      await DatabaseService(uid: user.uid).updateUserData(
+        '',
+        '',
+        'I don\'t have a vehicle',
+        'No engine or motor',
+        0,
+        0,
+        'Gas',
+        'Grid',
+        0,
+        0,
+        'I don\'t commute to work or school',
+        '',
+      );
       return _userFromFirebaseUser(user);
     } catch (e) {
       print(e.toString());

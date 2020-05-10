@@ -3,6 +3,7 @@ import 'package:impact/screens/wrapper.dart';
 import 'package:impact/services/auth.dart';
 import 'package:provider/provider.dart';
 import 'models/user.dart';
+import 'package:impact/services/routing.dart' as router;
 
 void main() => runApp(MyApp());
 
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
     return StreamProvider<User>.value(
       value: AuthService().user,
       child: MaterialApp(
+        onGenerateRoute: router.generateRoute,
         home: Wrapper(),
       ),
     );
