@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:impact/screens/shared/constants.dart';
 import 'package:impact/models/user.dart';
 import 'package:impact/screens/shared/loading.dart';
+import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:impact/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +50,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
             child: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(20),
-                height: 2000,
+                height: 800,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
                   body: Column(
@@ -64,7 +65,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            SizedBox(height: 50),
+                            SizedBox(height: 20),
                             Container(
                               width: 300,
                               child: Text(
@@ -193,6 +194,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                               color: const Color(0XFF1451DB),
                                               textColor: Colors.white,
                                               onPressed: () async {
+                                                Navigator.pushNamed(
+                                                    context, vehicle);
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(

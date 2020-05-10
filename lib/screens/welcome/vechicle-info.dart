@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:impact/screens/shared/constants.dart';
 import 'package:impact/models/user.dart';
 import 'package:impact/screens/shared/loading.dart';
+import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:impact/services/database.dart';
 import 'package:provider/provider.dart';
 
@@ -56,7 +57,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
             child: Scaffold(
               backgroundColor: Colors.transparent,
               body: Container(
-                height: 2000,
+                height: 800,
                 padding: EdgeInsets.all(20),
                 child: SingleChildScrollView(
                   child: Column(
@@ -199,6 +200,8 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                               color: const Color(0XFF1451DB),
                                               textColor: Colors.white,
                                               onPressed: () async {
+                                                Navigator.pushNamed(
+                                                    context, energy);
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(
