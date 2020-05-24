@@ -17,9 +17,10 @@ class Loading extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               SizedBox(width: 100, height: 100, child: svg),
+              SizedBox(height: 20),
               SizedBox(
                   height: 2,
-                  width: 150,
+                  width: 80,
                   child: LinearProgressIndicator(
                     valueColor:
                         AlwaysStoppedAnimation<Color>(Color(0XFFCADD64)),

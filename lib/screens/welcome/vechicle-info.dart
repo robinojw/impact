@@ -26,6 +26,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
   int _currentElectric;
   int _currentHeating;
   String _currentCommute;
+  List<dynamic> emissions;
   String _currentCity;
 
   final List<String> vehicles = [
@@ -232,6 +233,9 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                               userData.heating,
                                                           _currentCommute ??
                                                               userData.commute,
+                                                          emissions ??
+                                                              userData
+                                                                  .emissions,
                                                           _currentCity ??
                                                               userData.city);
                                                   //route to next page

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:impact/models/impactUser.dart';
+import 'package:impact/screens/authenticate/authenticate.dart';
 import 'package:impact/screens/home/home.dart';
+import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/screens/welcome/get_started.dart';
 import 'package:impact/screens/welcome/personal_info.dart';
 import 'package:impact/services/database.dart';
@@ -12,16 +15,28 @@ class Wrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
-    final userData = UserData().name;
+    if (user != null) {
+      return StreamBuilder(
+          stream: DatabaseService(uid: user.uid).userData,
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              UserData userData = snapshot.data;
 
-    if (user == null) {
-      return GetStarted();
-    } else {
-      if (userData == null) {
-        return PersonalInfo();
-      } else {
-        return Home();
-      }
+              if (user.uid == null) {
+                return Authenticate();
+              } else {
+                if (userData.name == '') {
+                  return PersonalInfo();
+                } else {
+                  return Home();
+                }
+              }
+            } else {
+              // print("Wrapper $snapshot.error");
+              return GetStarted();
+            }
+          });
     }
+    return Authenticate();
   }
 }

@@ -15,23 +15,19 @@ class AuthService {
     return _auth.onAuthStateChanged.map(_userFromFirebaseUser);
   }
 
-  Future signInAnon() async {
-    try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-
+      List<dynamic> emissions = [
+        Emission(
+                emissionIcon: "Car",
+                emissionName: "Car Journey",
+                emissionType: "5.6 Miles",
+                ghGas: 621)
+            .toJson()
+      ];
       await DatabaseService(uid: user.uid).updateUserData(
         '',
         '',
@@ -44,6 +40,7 @@ class AuthService {
         0,
         0,
         'I don\'t commute to work or school',
+        emissions,
         '',
       );
       return _userFromFirebaseUser(user);

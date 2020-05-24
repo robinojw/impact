@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:impact/screens/authenticate/sign_in.dart';
+import 'package:impact/screens/home/home.dart';
 import 'package:impact/screens/shared/constants.dart';
 import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
@@ -110,7 +112,7 @@ class _RegisterState extends State<Register> {
                             textColor: Colors.white,
                             child: Text("Already have an account? Sign In"),
                             onPressed: () {
-                              widget.toggleView();
+                              Navigator.pushNamed(context, auth);
                             },
                           ),
                           SizedBox(height: 12.0),

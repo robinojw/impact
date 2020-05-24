@@ -2,7 +2,6 @@ import 'package:impact/screens/authenticate/register.dart';
 import 'package:impact/screens/home/home.dart';
 import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
-
 import 'package:flutter/material.dart';
 import 'package:impact/screens/authenticate/authenticate.dart';
 import 'package:impact/screens/welcome/energy_info.dart';

@@ -25,6 +25,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
   int _currentElectric;
   int _currentHeating;
   String _currentCommute;
+  List<dynamic> emissions;
   String _currentCity;
 
   final List<String> commutes = [
@@ -39,6 +40,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
 
   @override
   Widget build(BuildContext context) {
+    const timer = const Duration(seconds: 1);
     final user = Provider.of<User>(context);
     return StreamBuilder<UserData>(
       stream: DatabaseService(uid: user.uid).userData,
@@ -226,6 +228,9 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                                               userData.heating,
                                                           _currentCommute ??
                                                               userData.commute,
+                                                          emissions ??
+                                                              userData
+                                                                  .emissions,
                                                           _currentCity ??
                                                               userData.city);
                                                   //route to next page

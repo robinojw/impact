@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
+import 'package:impact/services/database.dart';
 
 class GetStarted extends StatelessWidget {
   @override
@@ -20,18 +21,20 @@ class GetStarted extends StatelessWidget {
 
                 //-----Icon and App Name----
                 Column(children: <Widget>[
-                  Image.asset('assets/impact-white.png'),
+                  Image.asset('assets/impact.png',
+                      color: Colors.white, width: 50),
+                  SizedBox(height: 5),
                   Text('Impact',
                       style: TextStyle(color: Colors.white, fontSize: 14))
                 ]),
 
-                SizedBox(height: 180),
+                SizedBox(height: 150),
 
                 //-------Title-------------
                 Text('It\'s time you changed the way you impact our planet.',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 30,
+                        fontSize: 24,
                         fontWeight: FontWeight.bold)),
 
                 SizedBox(height: 300),
@@ -41,7 +44,7 @@ class GetStarted extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5)),
                   minWidth: 400,
-                  height: 42.5,
+                  height: 50,
                   child: FlatButton(
                     child: Text("Get Started",
                         style: TextStyle(fontWeight: FontWeight.w400)),

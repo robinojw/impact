@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impact/models/impactUser.dart';
 import 'package:impact/models/user.dart';
@@ -22,6 +25,7 @@ class DatabaseService {
     int electric,
     int heating,
     String commute,
+    List<dynamic> emissions,
     String city,
   ) async {
     return await usersCollection.document(uid).setData({
@@ -36,8 +40,29 @@ class DatabaseService {
       'electric': electric,
       'heating': heating,
       'commute': commute,
+      'emissions': emissions.map((i) => Emission().toJson()).toList(),
       'city': city,
     });
+  }
+
+  //User data from snapshot
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    var emissionsList = snapshot.data['emissions'] as List;
+    return UserData(
+      username: snapshot.data['username'],
+      name: snapshot.data['name'],
+      vehicle: snapshot.data['vehicle'],
+      fuel: snapshot.data['fuel'],
+      engineSize: snapshot.data['engineSize'],
+      vehicleMpg: snapshot.data['vehicleMpg'],
+      energy: snapshot.data['energy'],
+      electricity: snapshot.data['electricity'],
+      electric: snapshot.data['electric'],
+      heating: snapshot.data['heating'],
+      commute: snapshot.data['commute'],
+      emissions: emissionsList.map((i) => Emission.fromJson(i)).toList(),
+      city: snapshot.data['city'],
+    );
   }
 
   //Users from snapshot
@@ -55,36 +80,20 @@ class DatabaseService {
         electric: doc.data['electric'] ?? '',
         heating: doc.data['heating'] ?? '',
         commute: doc.data['commute'] ?? '',
+        emissions: doc.data['emissions'] ?? '',
         city: doc.data['city'] ?? '',
       );
     }).toList();
   }
 
+  //Get user doc stream
+
+  Stream<UserData> get userData {
+    return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
   //Get users stream
   Stream<List<ImpactUser>> get users {
     return usersCollection.snapshots().map(_userListFromSnapshot);
-  }
-
-  //User data from snapshot
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    return UserData(
-      username: snapshot.data['username'],
-      name: snapshot.data['name'],
-      vehicle: snapshot.data['vehicle'],
-      fuel: snapshot.data['fuel'],
-      engineSize: snapshot.data['engineSize'],
-      vehicleMpg: snapshot.data['vehicleMpg'],
-      energy: snapshot.data['energy'],
-      electricity: snapshot.data['electricity'],
-      electric: snapshot.data['electric'],
-      heating: snapshot.data['heating'],
-      commute: snapshot.data['commute'],
-      city: snapshot.data['city'],
-    );
-  }
-
-  //Get user doc stream
-  Stream<UserData> get userData {
-    return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 }

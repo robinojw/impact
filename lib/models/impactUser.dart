@@ -12,6 +12,7 @@ class ImpactUser {
   final int electric;
   final int heating;
   final String commute;
+  final List<dynamic> emissions;
   final String city;
 
   ImpactUser({
@@ -26,6 +27,7 @@ class ImpactUser {
     this.electric,
     this.heating,
     this.commute,
+    this.emissions,
     this.city,
   });
 }

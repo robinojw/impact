@@ -28,6 +28,7 @@ dependencies:
   provider: ^4.0.5+1
   shared_preferences: ^0.5.7+1
   flutter_svg: ^0.17.4
+  charts_flutter: ^0.9.0
 
 dev_dependencies:
   flutter_test:
@@ -49,11 +50,15 @@ flutter:
     - assets/background.png
     - assets/impact.svg
     - assets/impact.gif
+    - assets/impact.png
     - assets/impact-white.png
     - assets/background-large.jpg
     - assets/personal-info.png
     - assets/vehicle-info.png
     - assets/energy-info.png
+    - assets/improve.png
+    - assets/default-profile.png
+    - assets/underground.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

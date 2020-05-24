@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 class User {
   final String uid;
 
@@ -16,6 +18,7 @@ class UserData {
   final int electric;
   final int heating;
   final String commute;
+  final List<dynamic> emissions;
   final String city;
 
   UserData({
@@ -30,8 +33,25 @@ class UserData {
     this.electric,
     this.heating,
     this.commute,
+    this.emissions,
     this.city,
   });
+
+  Map<String, dynamic> toJson() => {
+        'username': username,
+        'name': name,
+        'vehicle': vehicle,
+        'fuel': fuel,
+        'engineSize': engineSize,
+        'vehicleMpg': vehicleMpg,
+        'energy': energy,
+        'electricity': electricity,
+        'electric': electric,
+        'heating': heating,
+        'commute': commute,
+        'emissions': emissions,
+        'city': city,
+      };
 }
 
 class Emission {
@@ -42,4 +62,20 @@ class Emission {
 
   Emission(
       {this.emissionIcon, this.emissionName, this.emissionType, this.ghGas});
+
+  factory Emission.fromJson(Map<String, dynamic> json) => Emission(
+        emissionIcon: json["emissonIcon"],
+        emissionName: json["emissionName"],
+        emissionType: json["emissionType"],
+        ghGas: json["ghGas"],
+      );
+
+  Map<String, dynamic> toJson() {
+    return {
+      'emissionIcon': emissionIcon,
+      'emissionName': emissionName,
+      'emissionType': emissionType,
+      'ghGas': ghGas,
+    };
+  }
 }
