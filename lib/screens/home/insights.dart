@@ -20,6 +20,7 @@ class _InsightsState extends State<Insights> {
   double totalEmissions = 0;
   double averageEmissions = 0;
   double containerHeight = 0;
+  int listIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +38,7 @@ class _InsightsState extends State<Insights> {
                   viewSlider(),
                   SizedBox(height: 10),
                   Container(height: 200, child: insightsChart),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -87,7 +88,7 @@ class _InsightsState extends State<Insights> {
     };
 
     return CupertinoSlidingSegmentedControl(
-        thumbColor: Colors.grey,
+        thumbColor: const Color(0xFF838383),
         groupValue: currentTab,
         children: tabs,
         onValueChanged: (int newVal) {
@@ -103,7 +104,7 @@ class _InsightsState extends State<Insights> {
     // }
     return Container(
         decoration: BoxDecoration(
-            color: const Color(0xFF252740),
+            color: const Color(0xD9252740),
             borderRadius: BorderRadius.circular(5)),
         width: 170,
         height: 129,
@@ -183,7 +184,7 @@ class _InsightsState extends State<Insights> {
   Widget rightCard(userData) {
     return Container(
         decoration: BoxDecoration(
-            color: const Color(0xFF252740),
+            color: const Color(0xD9252740),
             borderRadius: BorderRadius.circular(5)),
         width: 170,
         height: 129,
@@ -237,7 +238,7 @@ class _InsightsState extends State<Insights> {
 
   //------Card List---------
   Widget cardList(List<Emission> emissionList) {
-    containerHeight = 75 * emissionList.length.toDouble();
+    containerHeight = 70 * emissionList.length.toDouble();
 
     if (emissionList != null) {
       return ListView.builder(
@@ -245,7 +246,7 @@ class _InsightsState extends State<Insights> {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: emissionList.length,
         itemBuilder: (context, index) {
-          return cardTile(emissionList[index]);
+          return cardTile(emissionList[index], emissionList.length);
         },
       );
     } else {
@@ -254,8 +255,12 @@ class _InsightsState extends State<Insights> {
   }
 
   //------Card Tile---------
-  Widget cardTile(emission) {
-    totalEmissions += emission.ghGas;
+  Widget cardTile(emission, int length) {
+    if (listIndex != length) {
+      totalEmissions += emission.ghGas;
+      listIndex++;
+    }
+
     if (averageEmissions == 0) {
       averageEmissions = 3520;
     }
@@ -264,7 +269,7 @@ class _InsightsState extends State<Insights> {
         padding: const EdgeInsets.only(top: 0, bottom: 0),
         child: Card(
           margin: EdgeInsets.only(top: 1.5, left: 0, right: 0, bottom: 1.5),
-          color: const Color(0xFF252740),
+          color: const Color(0xD9252740),
           child: ListTile(
             dense: true,
             leading: Icon(

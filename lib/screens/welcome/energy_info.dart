@@ -19,12 +19,12 @@ class _EnergyInfoState extends State<EnergyInfo> {
   String _currentName;
   String _currentVehicle;
   String _currentFuel;
-  int _currentEngineSize;
+  double _currentEngineSize;
   int _currentMpg;
   String _currentEnergy;
   String _currentElectricity;
-  int _currentElectric;
-  int _currentHeating;
+  double _currentElectric;
+  double _currentHeating;
   String _currentCommute;
   List<Emission> emissions;
   String _currentCity;
@@ -200,7 +200,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                                   : null,
                                               onChanged: (val) => setState(
                                                 () => _currentHeating =
-                                                    int.parse(val),
+                                                    double.parse(val),
                                               ),
                                             ),
                                           ]),
@@ -230,7 +230,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                                   : null,
                                               onChanged: (val) => setState(
                                                 () => _currentElectric =
-                                                    int.parse(val),
+                                                    double.parse(val),
                                               ),
                                             ),
                                           ]),

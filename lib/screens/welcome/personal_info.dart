@@ -18,12 +18,12 @@ class _PersonalInfoState extends State<PersonalInfo> {
   String _currentName;
   String _currentVehicle;
   String _currentFuel;
-  int _currentEngineSize;
+  double _currentEngineSize;
   int _currentMpg;
   String _currentEnergy;
   String _currentElectricity;
-  int _currentElectric;
-  int _currentHeating;
+  double _currentElectric;
+  double _currentHeating;
   String _currentCommute;
   List<Emission> emissions;
   String _currentCity;

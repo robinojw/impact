@@ -123,6 +123,7 @@ class _SignInState extends State<SignIn> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               TextFormField(
+                                keyboardType: TextInputType.emailAddress,
                                 decoration: textInputDecoration.copyWith(
                                     hintText: 'Email:'),
                                 validator: (val) => val.isEmpty

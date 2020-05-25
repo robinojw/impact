@@ -1,5 +1,3 @@
-import 'package:meta/meta.dart';
-
 class User {
   final String uid;
 
@@ -11,12 +9,12 @@ class UserData {
   final String name;
   final String vehicle;
   final String fuel;
-  final int engineSize;
+  final double engineSize;
   final int vehicleMpg;
   final String energy;
   final String electricity;
-  final int electric;
-  final int heating;
+  final double electric;
+  final double heating;
   final String commute;
   final List<Emission> emissions;
   final String city;
@@ -36,22 +34,6 @@ class UserData {
     this.emissions,
     this.city,
   });
-
-  // Map<String, dynamic> toJson() => {
-  //       'username': username,
-  //       'name': name,
-  //       'vehicle': vehicle,
-  //       'fuel': fuel,
-  //       'engineSize': engineSize,
-  //       'vehicleMpg': vehicleMpg,
-  //       'energy': energy,
-  //       'electricity': electricity,
-  //       'electric': electric,
-  //       'heating': heating,
-  //       'commute': commute,
-  //       'emissions': emissions,
-  //       'city': city,
-  //     };
 
   Map<String, dynamic> toJson() {
     List<Map> emissions = this.emissions != null

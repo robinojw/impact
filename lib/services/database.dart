@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:impact/models/impactUser.dart';
+import 'package:impact/models/item.dart';
 import 'package:impact/models/user.dart';
 
 class DatabaseService {
@@ -13,20 +14,36 @@ class DatabaseService {
   final CollectionReference usersCollection =
       Firestore.instance.collection('users');
 
-  final CollectionReference emissionCollection =
-      Firestore.instance.collection('users');
+  final CollectionReference itemsCollection =
+      Firestore.instance.collection('items');
+
+  Future updateItems(
+    String image,
+    String title,
+    String desc,
+    int price,
+    int savings,
+  ) async {
+    return await itemsCollection.document().setData({
+      'image': image,
+      'title': title,
+      'desc': desc,
+      'price': price,
+      'savings': savings,
+    });
+  }
 
   Future updateUserData(
     String username,
     String name,
     String vehicle,
     String fuel,
-    int engineSize,
+    double engineSize,
     int vehicleMpg,
     String energy,
     String electricity,
-    int electric,
-    int heating,
+    double electric,
+    double heating,
     String commute,
     List<Emission> emissions,
     String city,
@@ -69,6 +86,19 @@ class DatabaseService {
     );
   }
 
+  //Item data from snapshot
+  List<Item> _itemDataFromSnapshot(QuerySnapshot snapshot) {
+    return snapshot.documents.map((doc) {
+      return Item(
+        image: doc.data['image'] ?? '',
+        title: doc.data['title'] ?? '',
+        desc: doc.data['desc'] ?? '',
+        price: doc.data['price'] ?? 0,
+        savings: doc.data['savings'] ?? 0,
+      );
+    }).toList();
+  }
+
   //Users from snapshot
   List<Emission> _emissionListFromSnapshot(DocumentSnapshot snapshot) {
     return snapshot.data['emissions'].map((doc) {
@@ -82,24 +112,18 @@ class DatabaseService {
   }
 
   //Get user doc stream
-
   Stream<UserData> get userData {
     return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
   Stream<List<Emission>> get emissionData {
-    return emissionCollection
+    return usersCollection
         .document(uid)
         .snapshots()
         .map(_emissionListFromSnapshot);
   }
 
-  // Stream<List<Emission>> get emissionData {
-  //   return usersCollection.document(uid).snapshots().map(_userListFromSnapshot);
-  // }
-
-  // //Get users stream
-  // Stream<List<Emission>> get emissions {
-  //   return usersCollection.snapshots().map(_emissionListFromSnapshot);
-  // }
+  Stream<List<Item>> get items {
+    return itemsCollection.snapshots().map(_itemDataFromSnapshot);
+  }
 }

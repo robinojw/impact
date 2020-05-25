@@ -54,6 +54,7 @@ class _RegisterState extends State<Register> {
                       child: Column(
                         children: <Widget>[
                           TextFormField(
+                            keyboardType: TextInputType.emailAddress,
                             decoration: textInputDecoration.copyWith(
                                 hintText: 'Email:'),
                             validator: (val) => val.isEmpty

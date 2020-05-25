@@ -19,12 +19,12 @@ class _VehicleInfoState extends State<VehicleInfo> {
   String _currentName;
   String _currentVehicle;
   String _currentFuel;
-  int _currentEngineSize;
+  double _currentEngineSize;
   int _currentMpg;
   String _currentEnergy;
   String _currentElectricity;
-  int _currentElectric;
-  int _currentHeating;
+  double _currentElectric;
+  double _currentHeating;
   String _currentCommute;
   List<Emission> emissions;
   String _currentCity;
@@ -167,8 +167,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                               style: TextStyle(
                                                   color: Colors.white),
                                               decoration: textInputDecoration,
-                                              keyboardType:
-                                                  TextInputType.number,
+                                              keyboardType: TextInputType.text,
                                               inputFormatters: <
                                                   TextInputFormatter>[
                                                 WhitelistingTextInputFormatter
@@ -179,7 +178,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                                   : null,
                                               onChanged: (val) => setState(() =>
                                                   _currentEngineSize =
-                                                      int.parse(val)),
+                                                      double.parse(val)),
                                             ),
                                           ]),
                                     SizedBox(height: 20),
