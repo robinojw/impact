@@ -18,7 +18,7 @@ class UserData {
   final int electric;
   final int heating;
   final String commute;
-  final List<dynamic> emissions;
+  final List<Emission> emissions;
   final String city;
 
   UserData({
@@ -37,21 +37,42 @@ class UserData {
     this.city,
   });
 
-  Map<String, dynamic> toJson() => {
-        'username': username,
-        'name': name,
-        'vehicle': vehicle,
-        'fuel': fuel,
-        'engineSize': engineSize,
-        'vehicleMpg': vehicleMpg,
-        'energy': energy,
-        'electricity': electricity,
-        'electric': electric,
-        'heating': heating,
-        'commute': commute,
-        'emissions': emissions,
-        'city': city,
-      };
+  // Map<String, dynamic> toJson() => {
+  //       'username': username,
+  //       'name': name,
+  //       'vehicle': vehicle,
+  //       'fuel': fuel,
+  //       'engineSize': engineSize,
+  //       'vehicleMpg': vehicleMpg,
+  //       'energy': energy,
+  //       'electricity': electricity,
+  //       'electric': electric,
+  //       'heating': heating,
+  //       'commute': commute,
+  //       'emissions': emissions,
+  //       'city': city,
+  //     };
+
+  Map<String, dynamic> toJson() {
+    List<Map> emissions = this.emissions != null
+        ? this.emissions.map((i) => i.toJson()).toList()
+        : null;
+    return {
+      'username': username,
+      'name': name,
+      'vehicle': vehicle,
+      'fuel': fuel,
+      'engineSize': engineSize,
+      'vehicleMpg': vehicleMpg,
+      'energy': energy,
+      'electricity': electricity,
+      'electric': electric,
+      'heating': heating,
+      'commute': commute,
+      'emissions': emissions,
+      'city': city,
+    };
+  }
 }
 
 class Emission {

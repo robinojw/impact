@@ -26,7 +26,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
   int _currentElectric;
   int _currentHeating;
   String _currentCommute;
-  List<dynamic> emissions;
+  List<Emission> emissions;
   String _currentCity;
 
   bool _value = false;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impact/screens/home/add_emission.dart';
-import 'package:impact/screens/home/day_chart.dart';
+import 'package:impact/screens/home/charts/day_chart.dart';
 import 'package:impact/services/auth.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 

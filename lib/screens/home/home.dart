@@ -51,11 +51,13 @@ class _HomeState extends State<Home> {
               height: 800,
               child: Scaffold(
                 backgroundColor: Colors.transparent,
-                body: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      showWidget(),
-                    ]),
+                body: SingleChildScrollView(
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        showWidget(),
+                      ]),
+                ),
                 bottomNavigationBar: CupertinoTabBar(
                     currentIndex: _index,
                     backgroundColor: Colors.transparent,
@@ -65,7 +67,7 @@ class _HomeState extends State<Home> {
                       BottomNavigationBarItem(
                           icon: Icon(Icons.group), title: Text('Group')),
                       BottomNavigationBarItem(
-                          icon: ImageIcon(AssetImage('assets/improve.png')),
+                          icon: Icon(Icons.nature_people),
                           title: Text('Improve')),
                       BottomNavigationBarItem(
                           icon:
@@ -79,8 +81,7 @@ class _HomeState extends State<Home> {
               ),
             );
           } else {
-            print('Home');
-            return Loading();
+            return Container(height: 0);
           }
         });
   }

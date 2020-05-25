@@ -20,13 +20,27 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-      List<dynamic> emissions = [
+      List<Emission> emissions = [
         Emission(
-                emissionIcon: "Car",
-                emissionName: "Car Journey",
-                emissionType: "5.6 Miles",
-                ghGas: 621)
-            .toJson()
+            emissionIcon: "Car",
+            emissionName: "Car Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 621),
+        Emission(
+            emissionIcon: "Car",
+            emissionName: "Car Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 621),
+        Emission(
+            emissionIcon: "Car",
+            emissionName: "Car Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 621),
+        Emission(
+            emissionIcon: "Car",
+            emissionName: "Car Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 621)
       ];
       await DatabaseService(uid: user.uid).updateUserData(
         '',

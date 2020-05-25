@@ -13,6 +13,9 @@ class DatabaseService {
   final CollectionReference usersCollection =
       Firestore.instance.collection('users');
 
+  final CollectionReference emissionCollection =
+      Firestore.instance.collection('users');
+
   Future updateUserData(
     String username,
     String name,
@@ -25,7 +28,7 @@ class DatabaseService {
     int electric,
     int heating,
     String commute,
-    List<dynamic> emissions,
+    List<Emission> emissions,
     String city,
   ) async {
     return await usersCollection.document(uid).setData({
@@ -40,7 +43,8 @@ class DatabaseService {
       'electric': electric,
       'heating': heating,
       'commute': commute,
-      'emissions': emissions.map((i) => Emission().toJson()).toList(),
+      'emissions':
+          emissions != null ? emissions.map((i) => i.toJson()).toList() : null,
       'city': city,
     });
   }
@@ -66,22 +70,13 @@ class DatabaseService {
   }
 
   //Users from snapshot
-  List<ImpactUser> _userListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
-      return ImpactUser(
-        username: doc.data['username'] ?? '',
-        name: doc.data['name'] ?? '',
-        vehicle: doc.data['vehicle'] ?? '',
-        fuel: doc.data['fuel'] ?? '',
-        engineSize: doc.data['engineSize'] ?? '',
-        vehicleMpg: doc.data['vehicleMpg'] ?? 0,
-        energy: doc.data['energy'] ?? '',
-        electricity: doc.data['electricity'] ?? '',
-        electric: doc.data['electric'] ?? '',
-        heating: doc.data['heating'] ?? '',
-        commute: doc.data['commute'] ?? '',
-        emissions: doc.data['emissions'] ?? '',
-        city: doc.data['city'] ?? '',
+  List<Emission> _emissionListFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data['emissions'].map((doc) {
+      return Emission(
+        emissionIcon: doc.data['emissionIcon'] ?? "",
+        emissionName: doc.data['emissionName'] ?? "",
+        emissionType: doc.data['emissionType'] ?? "",
+        ghGas: doc.data['ghGas'] ?? "",
       );
     }).toList();
   }
@@ -92,8 +87,19 @@ class DatabaseService {
     return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  //Get users stream
-  Stream<List<ImpactUser>> get users {
-    return usersCollection.snapshots().map(_userListFromSnapshot);
+  Stream<List<Emission>> get emissionData {
+    return emissionCollection
+        .document(uid)
+        .snapshots()
+        .map(_emissionListFromSnapshot);
   }
+
+  // Stream<List<Emission>> get emissionData {
+  //   return usersCollection.document(uid).snapshots().map(_userListFromSnapshot);
+  // }
+
+  // //Get users stream
+  // Stream<List<Emission>> get emissions {
+  //   return usersCollection.snapshots().map(_emissionListFromSnapshot);
+  // }
 }

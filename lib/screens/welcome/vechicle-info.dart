@@ -26,7 +26,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
   int _currentElectric;
   int _currentHeating;
   String _currentCommute;
-  List<dynamic> emissions;
+  List<Emission> emissions;
   String _currentCity;
 
   final List<String> vehicles = [

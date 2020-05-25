@@ -12,7 +12,7 @@ class ImpactUser {
   final int electric;
   final int heating;
   final String commute;
-  final List<dynamic> emissions;
+  final emissions;
   final String city;
 
   ImpactUser({

@@ -79,7 +79,7 @@ class _ProfileState extends State<Profile> {
               ],
             );
           } else {
-            return Loading();
+            return Container(height: 0);
           }
         });
   }
