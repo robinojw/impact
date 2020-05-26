@@ -86,6 +86,15 @@ class DatabaseService {
     );
   }
 
+  Emission _addEmissionToSnapshot(DocumentSnapshot snapshot) {
+    return Emission(
+      emissionIcon: snapshot.data['emissionIcon'],
+      emissionName: snapshot.data['emissionName'],
+      emissionType: snapshot.data['emissionType'],
+      ghGas: snapshot.data['ghGas'],
+    );
+  }
+
   //Item data from snapshot
   List<Item> _itemDataFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
@@ -114,6 +123,11 @@ class DatabaseService {
   //Get user doc stream
   Stream<UserData> get userData {
     return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
+  }
+
+  //Get Emission Data
+  Stream<Emission> get emission {
+    return itemsCollection.document().snapshots().map(_addEmissionToSnapshot);
   }
 
   Stream<List<Emission>> get emissionData {

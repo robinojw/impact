@@ -11,9 +11,8 @@ class Impact extends StatefulWidget {
 
 class _ImpactState extends State<Impact> {
   final AuthService _auth = AuthService();
-  bool show = false;
-
   Widget chart = DayChart.withSampleData();
+  bool show = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,25 +48,22 @@ class _ImpactState extends State<Impact> {
           children: <Widget>[
             SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Text('Your impact levels are',
-                    style: TextStyle(color: Colors.white, fontSize: 16.0)),
-                ButtonTheme(
-                  minWidth: 0,
-                  padding: EdgeInsets.all(0),
-                  child: FlatButton(
-                    padding: EdgeInsets.all(0),
-                    onPressed: () => _addEmission(),
-                    child: Icon(Icons.add, color: Colors.white, size: 24.0),
-                  ),
-                )
-              ],
-            ),
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Text('Your impact levels are',
+                      style: TextStyle(color: Colors.white, fontSize: 16.0)),
+                  ButtonTheme(
+                      minWidth: 0,
+                      padding: EdgeInsets.all(0),
+                      child: FlatButton(
+                        padding: EdgeInsets.all(0),
+                        onPressed: () => _addEmission(),
+                        child: Icon(Icons.add, color: Colors.white, size: 24.0),
+                      ))
+                ]),
             Text('Average',
                 style: TextStyle(
                     height: 0.5, color: Colors.yellow, fontSize: 16.0)),
-            SizedBox(height: 360),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[

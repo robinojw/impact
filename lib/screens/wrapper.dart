@@ -25,7 +25,7 @@ class Wrapper extends StatelessWidget {
               if (user.uid == null) {
                 return Authenticate();
               } else {
-                if (userData.name == '') {
+                if (userData.name == '' || userData.emissions.isEmpty) {
                   return PersonalInfo();
                 } else {
                   return Home();
