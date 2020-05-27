@@ -205,35 +205,33 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                             ),
                                           ]),
                                     SizedBox(height: 20),
-                                    if (_value == true)
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text('Electricity Usage in KWh',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12)),
-                                            TextFormField(
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text('Electricity Usage in KWh',
                                               style: TextStyle(
-                                                  color: Colors.white),
-                                              decoration: textInputDecoration,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                WhitelistingTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              validator: (val) => val.isEmpty
-                                                  ? 'Please enter your electricity usage in KWh'
-                                                  : null,
-                                              onChanged: (val) => setState(
-                                                () => _currentElectric =
-                                                    double.parse(val),
-                                              ),
+                                                  color: Colors.grey,
+                                                  fontSize: 12)),
+                                          TextFormField(
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            decoration: textInputDecoration,
+                                            keyboardType: TextInputType.number,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              WhitelistingTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            validator: (val) => val.isEmpty
+                                                ? 'Please enter your electricity usage in KWh'
+                                                : null,
+                                            onChanged: (val) => setState(
+                                              () => _currentElectric =
+                                                  double.parse(val),
                                             ),
-                                          ]),
+                                          ),
+                                        ]),
                                     SizedBox(height: 20),
                                     Row(
                                         mainAxisAlignment:

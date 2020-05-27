@@ -258,6 +258,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
             ),
           );
         } else {
+          print('personal info loading');
           return Loading();
         }
       },

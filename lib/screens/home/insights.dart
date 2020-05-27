@@ -30,6 +30,12 @@ class _InsightsState extends State<Insights> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
+            for (var item in userData.emissions) {
+              if (listIndex < userData.emissions.length) {
+                totalEmissions += item.ghGas;
+                listIndex++;
+              }
+            }
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(10),
@@ -98,10 +104,12 @@ class _InsightsState extends State<Insights> {
         });
   }
 
-  Widget leftCard(UserData user) {
-    // for (int i = 0; i < user.emissions.length; i++) {
-    //   totalEmissions += user.emissions[i].ghGas;
-    // }
+  Widget leftCard(UserData userData) {
+    if (averageEmissions == 0) {
+      averageEmissions = 3520;
+    }
+    var remaining = averageEmissions - totalEmissions;
+
     return Container(
         decoration: BoxDecoration(
             color: const Color(0xD9252740),
@@ -168,7 +176,7 @@ class _InsightsState extends State<Insights> {
                           rankKey: 'completed',
                         ),
                         new CircularSegmentEntry(
-                          averageEmissions - totalEmissions,
+                          remaining,
                           const Color(0xFF3C3E4A),
                           rankKey: 'remaining',
                         )
@@ -182,6 +190,20 @@ class _InsightsState extends State<Insights> {
   }
 
   Widget rightCard(userData) {
+    Color color = Color(0xFFBCC158);
+    String prefix = '-';
+    double difference;
+
+    if (totalEmissions > averageEmissions) {
+      color = Color(0xFFDB4545);
+      prefix = "+";
+      difference = totalEmissions - averageEmissions;
+    } else {
+      color = Color(0xFFBCC158);
+      prefix = '-';
+      difference = averageEmissions - totalEmissions;
+    }
+
     return Container(
         decoration: BoxDecoration(
             color: const Color(0xD9252740),
@@ -227,20 +249,16 @@ class _InsightsState extends State<Insights> {
           SizedBox(height: 20),
           Align(
             alignment: Alignment.centerRight,
-            child: Text(
-                "-" +
-                    (averageEmissions.toInt() - totalEmissions.toInt())
-                        .toString(),
-                style: TextStyle(color: const Color(0xFFBCC158), fontSize: 26)),
+            child: Text(prefix + (difference.toInt()).toString(),
+                style: TextStyle(color: color, fontSize: 26)),
           )
         ]));
   }
 
   //------Card List---------
   Widget cardList(List<Emission> emissionList) {
-    containerHeight = 70 * emissionList.length.toDouble();
-
-    if (emissionList != null) {
+    if (emissionList.isNotEmpty) {
+      containerHeight = 70 * emissionList.length.toDouble();
       return ListView.builder(
         padding: EdgeInsets.all(0),
         physics: const NeverScrollableScrollPhysics(),
@@ -256,14 +274,9 @@ class _InsightsState extends State<Insights> {
 
   //------Card Tile---------
   Widget cardTile(emission, int length) {
-    if (listIndex != length) {
-      totalEmissions += emission.ghGas;
-      listIndex++;
-    }
+    Icon _emissionIcon;
 
-    if (averageEmissions == 0) {
-      averageEmissions = 3520;
-    }
+    _emissionIcon = getIcon(emission.emissionIcon);
 
     return Padding(
         padding: const EdgeInsets.only(top: 0, bottom: 0),
@@ -272,11 +285,7 @@ class _InsightsState extends State<Insights> {
           color: const Color(0xD9252740),
           child: ListTile(
             dense: true,
-            leading: Icon(
-              Icons.directions_car,
-              color: Colors.grey,
-              size: 29,
-            ),
+            leading: _emissionIcon,
             title: Text(emission.emissionName,
                 style: TextStyle(color: Colors.grey)),
             subtitle: Text(emission.emissionType,
@@ -285,5 +294,107 @@ class _InsightsState extends State<Insights> {
                 style: TextStyle(color: const Color(0xFFDB4545))),
           ),
         ));
+  }
+
+  Icon getIcon(String icon) {
+    switch (icon) {
+      case 'directions_bike':
+        return Icon(
+          Icons.directions_bike,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'directions_subway':
+        return Icon(
+          Icons.directions_subway,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'directions_bus':
+        return Icon(
+          Icons.directions_bus,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'train':
+        return Icon(
+          Icons.train,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'directions_car':
+        return Icon(
+          Icons.directions_car,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'directions_boat':
+        return Icon(
+          Icons.directions_boat,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'motorcycle':
+        return Icon(
+          Icons.motorcycle,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'tram':
+        return Icon(
+          Icons.tram,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'flight':
+        return Icon(
+          Icons.flight,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'battery_full':
+        return Icon(
+          Icons.battery_full,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'local_cafe':
+        return Icon(
+          Icons.local_cafe,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'web_asset':
+        return Icon(
+          Icons.web_asset,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'archive':
+        return Icon(
+          Icons.archive,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'layers':
+        return Icon(
+          Icons.layers,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'shopping_basket':
+        return Icon(
+          Icons.shopping_basket,
+          color: Colors.grey,
+          size: 29,
+        );
+        break;
+      default:
+        return Icon(
+          Icons.filter_drama,
+          color: Colors.grey,
+          size: 29,
+        );
+    }
   }
 }

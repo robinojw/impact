@@ -25,18 +25,20 @@ class Wrapper extends StatelessWidget {
               if (user.uid == null) {
                 return Authenticate();
               } else {
-                if (userData.name == '' || userData.emissions.isEmpty) {
+                if (userData.name == '') {
+                  //Change to if userData.emissions.isEmpty
                   return PersonalInfo();
                 } else {
                   return Home();
                 }
               }
             } else {
-              // print("Wrapper $snapshot.error");
+              print("Wrapper $snapshot.error");
               return GetStarted();
             }
           });
     }
+
     return Authenticate();
   }
 }

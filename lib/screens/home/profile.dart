@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impact/models/user.dart';
+import 'package:impact/screens/home/insights.dart';
 import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/services/auth.dart';
 import 'package:impact/services/database.dart';
@@ -11,6 +12,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Icon vehicleIcon;
+  Insights insights;
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
@@ -19,6 +22,7 @@ class _ProfileState extends State<Profile> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
+
             return Container(
               padding: EdgeInsets.all(10),
               child: Column(
@@ -131,7 +135,7 @@ class _ProfileState extends State<Profile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              icon,
+              getIcon(userData.vehicle),
               Text(userData.fuel, style: TextStyle(color: Colors.white)),
               Text(userData.vehicleMpg.toString() + " Mpg",
                   style: TextStyle(color: Colors.white)),
@@ -166,7 +170,7 @@ class _ProfileState extends State<Profile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              Icon(Icons.directions_subway, color: Colors.white, size: 28),
+              getIcon(userData.commute),
               Text('Electric', style: TextStyle(color: Colors.white)),
               Text('N/A', style: TextStyle(color: Colors.white)),
               Text('N/A', style: TextStyle(color: Colors.white)),
@@ -237,5 +241,107 @@ class _ProfileState extends State<Profile> {
         )
       ],
     );
+  }
+
+  Icon getIcon(String icon) {
+    switch (icon) {
+      case 'directions_bike':
+        return Icon(
+          Icons.directions_bike,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'directions_subway':
+        return Icon(
+          Icons.directions_subway,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'directions_bus':
+        return Icon(
+          Icons.directions_bus,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'train':
+        return Icon(
+          Icons.train,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'directions_car':
+        return Icon(
+          Icons.directions_car,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'directions_boat':
+        return Icon(
+          Icons.directions_boat,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'motorcycle':
+        return Icon(
+          Icons.motorcycle,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'tram':
+        return Icon(
+          Icons.tram,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'flight':
+        return Icon(
+          Icons.flight,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'battery_full':
+        return Icon(
+          Icons.battery_full,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'local_cafe':
+        return Icon(
+          Icons.local_cafe,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'web_asset':
+        return Icon(
+          Icons.web_asset,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'archive':
+        return Icon(
+          Icons.archive,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'layers':
+        return Icon(
+          Icons.layers,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'shopping_basket':
+        return Icon(
+          Icons.shopping_basket,
+          color: Colors.white,
+          size: 29,
+        );
+        break;
+      default:
+        return Icon(
+          Icons.filter_drama,
+          color: Colors.white,
+          size: 29,
+        );
+    }
   }
 }

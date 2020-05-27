@@ -153,34 +153,34 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                           ),
                                         ]),
                                     SizedBox(height: 20),
-                                    if ((_currentFuel == 'Petrol') ||
-                                        (_currentFuel == 'Diesel'))
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text('Engine Size',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12)),
-                                            TextFormField(
+                                    // if ((_currentFuel == 'Petrol') ||
+                                    //     (_currentFuel == 'Diesel'))
+                                    Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text('Engine Size',
                                               style: TextStyle(
-                                                  color: Colors.white),
-                                              decoration: textInputDecoration,
-                                              keyboardType: TextInputType.text,
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                WhitelistingTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              validator: (val) => val.isEmpty
-                                                  ? 'Please enter a engine size'
-                                                  : null,
-                                              onChanged: (val) => setState(() =>
-                                                  _currentEngineSize =
-                                                      double.parse(val)),
-                                            ),
-                                          ]),
+                                                  color: Colors.grey,
+                                                  fontSize: 12)),
+                                          TextFormField(
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                            decoration: textInputDecoration,
+                                            keyboardType: TextInputType.text,
+                                            inputFormatters: <
+                                                TextInputFormatter>[
+                                              WhitelistingTextInputFormatter
+                                                  .digitsOnly
+                                            ],
+                                            validator: (val) => val.isEmpty
+                                                ? 'Please enter a engine size'
+                                                : null,
+                                            onChanged: (val) => setState(() =>
+                                                _currentEngineSize =
+                                                    double.parse(val)),
+                                          ),
+                                        ]),
                                     SizedBox(height: 20),
                                     Row(
                                         mainAxisAlignment:
