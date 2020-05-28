@@ -15,27 +15,31 @@ class _ImproveState extends State<Improve> {
   int itemIndex = 0;
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-        child: Container(
-            padding: EdgeInsets.all(10),
-            child: Column(children: <Widget>[
-              SizedBox(height: 35),
-              titleRow('Decrease your impact'),
-              SizedBox(height: 15),
-              article(),
-              SizedBox(height: 20),
-              titleRow('Low impact alternatives'),
-              SizedBox(height: 15),
-              Container(
-                height: listHeight,
-                child: StreamBuilder<List<Item>>(
-                    stream: DatabaseService().items,
-                    builder: (context, snapshot) {
-                      List<Item> items = snapshot.data;
-                      return Container(child: itemList(items));
-                    }),
-              ),
-            ])));
+    return FutureBuilder(
+        future: DatabaseService().getItems(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            List<Item> items = snapshot.data;
+            return SingleChildScrollView(
+                child: Container(
+                    padding: EdgeInsets.all(10),
+                    child: Column(children: <Widget>[
+                      SizedBox(height: 35),
+                      titleRow('Decrease your impact'),
+                      SizedBox(height: 15),
+                      article(),
+                      SizedBox(height: 20),
+                      titleRow('Low impact alternatives'),
+                      SizedBox(height: 15),
+                      Container(
+                        height: listHeight,
+                        child: itemList(items),
+                      ),
+                    ])));
+          } else {
+            return Loading();
+          }
+        });
   }
 
   Widget titleRow(String title) {

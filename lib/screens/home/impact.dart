@@ -1,8 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:image_sequence_animator/image_sequence_animator.dart';
+import 'package:impact/models/user.dart';
 import 'package:impact/screens/home/add_emission.dart';
 import 'package:impact/screens/home/charts/day_chart.dart';
+import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/services/auth.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:impact/services/database.dart';
+import 'package:nima/nima_actor.dart';
+import 'package:provider/provider.dart';
 
 class Impact extends StatefulWidget {
   @override
@@ -13,6 +21,8 @@ class _ImpactState extends State<Impact> {
   final AuthService _auth = AuthService();
   Widget chart = DayChart.withSampleData();
   bool show = false;
+  int listIndex = 0;
+  int totalEmissions = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -64,23 +74,8 @@ class _ImpactState extends State<Impact> {
             Text('Average',
                 style: TextStyle(
                     height: 0.5, color: Colors.yellow, fontSize: 16.0)),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text('Today\'s total:',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.white, height: 0.9)),
-                Text('2446',
-                    style: TextStyle(
-                        fontSize: 60,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        height: 0.95)),
-                Text('grams of greenhouse emissions',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.white, height: 0.5)),
-              ],
-            ),
+            Container(height: 300, width: 400, child: animation()),
+            total(),
           ],
         ),
         SizedBox(height: 20),
@@ -88,6 +83,49 @@ class _ImpactState extends State<Impact> {
             alignment: Alignment.bottomCenter,
             child: SizedBox(height: 175, child: chart)),
       ]),
+    );
+  }
+
+  Widget animation() {
+    return Container(height: 0);
+  }
+
+  Widget total() {
+    final user = Provider.of<User>(context);
+    return Container(
+      height: 90,
+      child: FutureBuilder<UserData>(
+          future: DatabaseService(uid: user.uid).getUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              UserData userData = snapshot.data;
+              for (var item in userData.emissions) {
+                if (listIndex < userData.emissions.length) {
+                  totalEmissions += item.ghGas;
+                  listIndex++;
+                }
+              }
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('Today\'s total:',
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.white, height: 0.9)),
+                  Text(totalEmissions.toString(),
+                      style: TextStyle(
+                          fontSize: 60,
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          height: 0.95)),
+                  Text('grams of greenhouse emissions',
+                      style: TextStyle(
+                          fontSize: 12, color: Colors.white, height: 0.5)),
+                ],
+              );
+            } else {
+              return Container(height: 0);
+            }
+          }),
     );
   }
 }

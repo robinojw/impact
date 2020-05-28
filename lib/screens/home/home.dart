@@ -21,31 +21,14 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   int _index = 2;
 
-  Widget showWidget() {
-    switch (_index) {
-      case 0:
-        return Group();
-      case 1:
-        return Improve();
-      case 2:
-        return Impact();
-      case 3:
-        return Insights();
-      case 4:
-        return Profile();
-        break;
-      default:
-        return Impact();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+        future: DatabaseService(uid: user.uid).getUserData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+            DatabaseService(uid: user.uid).checkUserDocumentExists();
             return Container(
               decoration: backgroundGradient,
               height: 800,
@@ -84,5 +67,23 @@ class _HomeState extends State<Home> {
             return Container(height: 0);
           }
         });
+  }
+
+  Widget showWidget() {
+    switch (_index) {
+      case 0:
+        return Group();
+      case 1:
+        return Improve();
+      case 2:
+        return Impact();
+      case 3:
+        return Insights();
+      case 4:
+        return Profile();
+        break;
+      default:
+        return Impact();
+    }
   }
 }

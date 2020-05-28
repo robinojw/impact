@@ -22,35 +22,35 @@ class AuthService {
       FirebaseUser user = result.user;
       List<Emission> emissions = [
         Emission(
-            emissionIcon: "Car",
-            emissionName: "Car Journey",
-            emissionType: "5.6 Miles",
-            ghGas: 621),
+            emissionIcon: "directions_bike",
+            emissionName: "E-Bike Journey",
+            emissionType: "7",
+            ghGas: 30),
+        Emission(
+            emissionIcon: "directions_subway",
+            emissionName: "Underground Journey",
+            emissionType: "5.6",
+            ghGas: 160),
+        Emission(
+            emissionIcon: "train",
+            emissionName: "Train Journey",
+            emissionType: "112",
+            ghGas: 643),
         Emission(
             emissionIcon: "Car",
-            emissionName: "Car Journey",
-            emissionType: "5.6 Miles",
-            ghGas: 621),
-        Emission(
-            emissionIcon: "Car",
-            emissionName: "Car Journey",
-            emissionType: "5.6 Miles",
-            ghGas: 621),
-        Emission(
-            emissionIcon: "Car",
-            emissionName: "Car Journey",
-            emissionType: "5.6 Miles",
-            ghGas: 621)
+            emissionName: "Train Journey",
+            emissionType: "112",
+            ghGas: 200)
       ];
       await DatabaseService(uid: user.uid).updateUserData(
         '',
         '',
-        'I don\'t have a vehicle',
+        'I don\'t own a vehicle',
         'No engine or motor',
         0,
         0,
-        'Gas',
-        'Grid',
+        '',
+        '',
         0,
         0,
         'I don\'t commute to work or school',

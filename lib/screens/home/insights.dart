@@ -6,6 +6,8 @@ import 'package:impact/screens/home/charts/insights_chart.dart';
 import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/services/database.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 class Insights extends StatefulWidget {
   @override
@@ -22,26 +24,30 @@ class _InsightsState extends State<Insights> {
   double containerHeight = 0;
   int listIndex = 0;
 
+  List<Emission> newList;
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+        future: DatabaseService(uid: user.uid).getUserData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
             for (var item in userData.emissions) {
               if (listIndex < userData.emissions.length) {
                 totalEmissions += item.ghGas;
+
                 listIndex++;
               }
             }
+            // newList = currentPeriod(currentTab, userData.emissions);
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(10),
                 child: Column(children: <Widget>[
                   SizedBox(height: 40),
-                  viewSlider(),
+                  viewSlider(userData.emissions),
                   SizedBox(height: 10),
                   Container(height: 200, child: insightsChart),
                   SizedBox(height: 20),
@@ -70,7 +76,7 @@ class _InsightsState extends State<Insights> {
         });
   }
 
-  Widget viewSlider() {
+  Widget viewSlider(List<Emission> emissions) {
     Widget tab(String view, int tab) {
       return GestureDetector(
         onTap: () {
@@ -100,6 +106,7 @@ class _InsightsState extends State<Insights> {
         onValueChanged: (int newVal) {
           setState(() {
             currentTab = newVal;
+            // newList = currentPeriod(currentTab, emissions);
           });
         });
   }
@@ -273,9 +280,10 @@ class _InsightsState extends State<Insights> {
   }
 
   //------Card Tile---------
-  Widget cardTile(emission, int length) {
+  Widget cardTile(Emission emission, int length) {
     Icon _emissionIcon;
 
+    print(emission.toJson());
     _emissionIcon = getIcon(emission.emissionIcon);
 
     return Padding(
@@ -397,4 +405,56 @@ class _InsightsState extends State<Insights> {
         );
     }
   }
+
+  // List<Emission> currentPeriod(int tab, List<Emission> emissions) {
+  //   DateTime period = DateTime.now();
+  //   List<Emission> timeList = new List<Emission>();
+  //   List<Emission> dummy = new List<Emission>();
+
+  //   if (emissions != null) {
+  //     if (tab == 0) {
+  //       for (var i in emissions) {
+  //         if ((i.time != null) &&
+  //             (i.time.day == period.day) &&
+  //             (i.time.month == period.month) &&
+  //             (i.time.year == period.year)) {
+  //           timeList.add(i);
+  //         }
+  //       }
+  //     }
+  //     if (tab == 1) {
+  //       int weekNumber(DateTime date) {
+  //         int dayOfYear = int.parse(DateFormat("D").format(date));
+  //         return ((dayOfYear - date.weekday + 10) / 7).floor();
+  //       }
+
+  //       for (var i in emissions) {
+  //         var eWeek = weekNumber(i.time);
+  //         var thisWeek = weekNumber(period);
+  //         if ((i.time != null) &&
+  //             (eWeek == thisWeek) &&
+  //             (i.time.year == period.year)) {
+  //           timeList.add(i);
+  //         }
+  //       }
+  //     }
+  //     if (tab == 2) {
+  //       for (var i in emissions) {
+  //         if ((i.time != null) &&
+  //             (i.time.month != period.month) &&
+  //             (i.time.year != period.year)) {
+  //           timeList.add(i);
+  //         }
+  //       }
+  //     }
+  //     if (tab == 3) {
+  //       for (var i in emissions) {
+  //         if ((i.time != null) && (i.time.year != period.year)) timeList.add(i);
+  //       }
+  //     }
+  //     print(timeList);
+  //     return timeList;
+  //   } else
+  //     return dummy;
+  // }
 }

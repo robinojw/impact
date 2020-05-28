@@ -25,7 +25,7 @@ class InsightsChart extends StatelessWidget {
   /// Create one series with sample hard coded data.
   static List<charts.Series<LinearSales, int>> _createSampleData() {
     final data = [
-      new LinearSales(0, 5),
+      new LinearSales(0, 50),
       new LinearSales(1, 25),
       new LinearSales(2, 100),
       new LinearSales(3, 75),

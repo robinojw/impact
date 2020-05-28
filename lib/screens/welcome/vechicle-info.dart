@@ -30,7 +30,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
   String _currentCity;
 
   final List<String> vehicles = [
-    'I don\'t have a vehicle',
+    'I don\'t own a vehicle',
     'Car',
     'Motorbike',
     'Bicycle',
@@ -48,8 +48,8 @@ class _VehicleInfoState extends State<VehicleInfo> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+      future: DatabaseService(uid: user.uid).getUserData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           UserData userData = snapshot.data;
@@ -139,8 +139,9 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                               style: TextStyle(
                                                   color: Colors.white),
                                               decoration: textInputDecoration,
-                                              onChanged: (val) => setState(
-                                                  () => _currentFuel = val),
+                                              onChanged: (val) => setState(() {
+                                                _currentFuel = val;
+                                              }),
                                               value:
                                                   _currentFuel ?? userData.fuel,
                                               items: fuels.map((fuel) {
@@ -153,34 +154,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                           ),
                                         ]),
                                     SizedBox(height: 20),
-                                    // if ((_currentFuel == 'Petrol') ||
-                                    //     (_currentFuel == 'Diesel'))
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('Engine Size',
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12)),
-                                          TextFormField(
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                            decoration: textInputDecoration,
-                                            keyboardType: TextInputType.text,
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              WhitelistingTextInputFormatter
-                                                  .digitsOnly
-                                            ],
-                                            validator: (val) => val.isEmpty
-                                                ? 'Please enter a engine size'
-                                                : null,
-                                            onChanged: (val) => setState(() =>
-                                                _currentEngineSize =
-                                                    double.parse(val)),
-                                          ),
-                                        ]),
+                                    engineSize(_currentFuel),
                                     SizedBox(height: 20),
                                     Row(
                                         mainAxisAlignment:
@@ -257,5 +231,27 @@ class _VehicleInfoState extends State<VehicleInfo> {
         }
       },
     );
+  }
+
+  Widget engineSize(String fuel) {
+    if ((fuel == 'Petrol') || (fuel == 'Diesel')) {
+      return Column(crossAxisAlignment: CrossAxisAlignment.start, children: <
+          Widget>[
+        Text('Engine Size', style: TextStyle(color: Colors.grey, fontSize: 12)),
+        TextFormField(
+          style: TextStyle(color: Colors.white),
+          decoration: textInputDecoration,
+          keyboardType: TextInputType.number,
+          inputFormatters: <TextInputFormatter>[
+            WhitelistingTextInputFormatter.digitsOnly
+          ],
+          validator: (val) => val.isEmpty ? 'Please enter a engine size' : null,
+          onChanged: (val) =>
+              setState(() => _currentEngineSize = double.parse(val)),
+        ),
+      ]);
+    } else {
+      return Container(height: 0);
+    }
   }
 }

@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class User {
   final String uid;
 
@@ -55,6 +57,23 @@ class UserData {
       'city': city,
     };
   }
+
+  UserData.fromSnapshot(DocumentSnapshot snapshot)
+      : username = snapshot.data['username'],
+        name = snapshot.data['name'],
+        vehicle = snapshot.data['vehicle'],
+        fuel = snapshot.data['fuel'],
+        engineSize = snapshot.data['engineSize'],
+        vehicleMpg = snapshot.data['vehicleMpg'],
+        energy = snapshot.data['energy'],
+        electricity = snapshot.data['electricity'],
+        electric = snapshot.data['electric'],
+        heating = snapshot.data['heating'],
+        commute = snapshot.data['commute'],
+        emissions = (snapshot.data['emissions'] as List)
+            .map((i) => Emission.fromJson(i))
+            .toList(),
+        city = snapshot.data['city'];
 }
 
 class Emission {
@@ -67,7 +86,7 @@ class Emission {
       {this.emissionIcon, this.emissionName, this.emissionType, this.ghGas});
 
   factory Emission.fromJson(Map<String, dynamic> json) => Emission(
-        emissionIcon: json["emissonIcon"],
+        emissionIcon: json["emissionIcon"],
         emissionName: json["emissionName"],
         emissionType: json["emissionType"],
         ghGas: json["ghGas"],

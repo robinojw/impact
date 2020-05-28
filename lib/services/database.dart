@@ -66,33 +66,40 @@ class DatabaseService {
     });
   }
 
-  //User data from snapshot
-  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
-    var emissionsList = snapshot.data['emissions'] as List;
-    return UserData(
-      username: snapshot.data['username'],
-      name: snapshot.data['name'],
-      vehicle: snapshot.data['vehicle'],
-      fuel: snapshot.data['fuel'],
-      engineSize: snapshot.data['engineSize'],
-      vehicleMpg: snapshot.data['vehicleMpg'],
-      energy: snapshot.data['energy'],
-      electricity: snapshot.data['electricity'],
-      electric: snapshot.data['electric'],
-      heating: snapshot.data['heating'],
-      commute: snapshot.data['commute'],
-      emissions: emissionsList.map((i) => Emission.fromJson(i)).toList(),
-      city: snapshot.data['city'],
-    );
+  Future<UserData> getUserData() async {
+    DocumentSnapshot userDocument = await usersCollection.document(uid).get();
+    if (userDocument.exists) {
+      return UserData.fromSnapshot(userDocument);
+    } else {
+      return UserData();
+    }
   }
 
-  Emission _addEmissionToSnapshot(DocumentSnapshot snapshot) {
-    return Emission(
-      emissionIcon: snapshot.data['emissionIcon'],
-      emissionName: snapshot.data['emissionName'],
-      emissionType: snapshot.data['emissionType'],
-      ghGas: snapshot.data['ghGas'],
-    );
+  Future<List<Item>> getItems() async {
+    QuerySnapshot items = await itemsCollection.getDocuments();
+    if (items.documents.isNotEmpty) {
+      return _itemDataFromSnapshot(items);
+    } else {
+      return List<Item>();
+    }
+  }
+
+  @override
+  Future<bool> checkUserDocumentExists() async {
+    DocumentSnapshot userDocument = await usersCollection.document(uid).get();
+    return userDocument.exists;
+  }
+
+  //emissions from snapshot
+  List<Emission> _emissionListFromSnapshot(DocumentSnapshot snapshot) {
+    return snapshot.data['emissions'].map((doc) {
+      return Emission(
+        emissionIcon: doc.data['emissionIcon'] ?? "",
+        emissionName: doc.data['emissionName'] ?? "",
+        emissionType: doc.data['emissionType'] ?? "",
+        ghGas: doc.data['ghGas'] ?? "",
+      );
+    }).toList();
   }
 
   //Item data from snapshot
@@ -108,26 +115,12 @@ class DatabaseService {
     }).toList();
   }
 
-  //Users from snapshot
-  List<Emission> _emissionListFromSnapshot(DocumentSnapshot snapshot) {
-    return snapshot.data['emissions'].map((doc) {
-      return Emission(
-        emissionIcon: doc.data['emissionIcon'] ?? "",
-        emissionName: doc.data['emissionName'] ?? "",
-        emissionType: doc.data['emissionType'] ?? "",
-        ghGas: doc.data['ghGas'] ?? "",
-      );
-    }).toList();
-  }
-
-  //Get user doc stream
   Stream<UserData> get userData {
     return usersCollection.document(uid).snapshots().map(_userDataFromSnapshot);
   }
 
-  //Get Emission Data
-  Stream<Emission> get emission {
-    return itemsCollection.document().snapshots().map(_addEmissionToSnapshot);
+  UserData _userDataFromSnapshot(DocumentSnapshot snapshot) {
+    return UserData.fromSnapshot(snapshot);
   }
 
   Stream<List<Emission>> get emissionData {

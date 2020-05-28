@@ -32,6 +32,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
   bool _value = false;
 
   final List<String> energySources = [
+    ' ',
     'Gas',
     'Oil',
     'Solar',
@@ -40,6 +41,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
   ];
 
   final List<String> electricitySources = [
+    ' ',
     'Grid',
     'Renewable Grid',
     'Solar',
@@ -49,8 +51,8 @@ class _EnergyInfoState extends State<EnergyInfo> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+      future: DatabaseService(uid: user.uid).getUserData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           UserData userData = snapshot.data;
@@ -175,63 +177,8 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                             }),
                                       ),
                                     ),
-                                    if (_value == true)
-                                      Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text('Heating Usage in KWh',
-                                                style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 12)),
-                                            TextFormField(
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                              decoration: textInputDecoration,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              inputFormatters: <
-                                                  TextInputFormatter>[
-                                                WhitelistingTextInputFormatter
-                                                    .digitsOnly
-                                              ],
-                                              validator: (val) => val.isEmpty
-                                                  ? 'Please enter your heating usage in KWh'
-                                                  : null,
-                                              onChanged: (val) => setState(
-                                                () => _currentHeating =
-                                                    double.parse(val),
-                                              ),
-                                            ),
-                                          ]),
                                     SizedBox(height: 20),
-                                    Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('Electricity Usage in KWh',
-                                              style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 12)),
-                                          TextFormField(
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                            decoration: textInputDecoration,
-                                            keyboardType: TextInputType.number,
-                                            inputFormatters: <
-                                                TextInputFormatter>[
-                                              WhitelistingTextInputFormatter
-                                                  .digitsOnly
-                                            ],
-                                            validator: (val) => val.isEmpty
-                                                ? 'Please enter your electricity usage in KWh'
-                                                : null,
-                                            onChanged: (val) => setState(
-                                              () => _currentElectric =
-                                                  double.parse(val),
-                                            ),
-                                          ),
-                                        ]),
+                                    energyUsage(),
                                     SizedBox(height: 20),
                                     Row(
                                         mainAxisAlignment:
@@ -307,5 +254,57 @@ class _EnergyInfoState extends State<EnergyInfo> {
         }
       },
     );
+  }
+
+  Widget energyUsage() {
+    if (_value == true) {
+      return Column(
+        children: <Widget>[
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Monthly Electricity Usage in KWh',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: textInputDecoration,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter.digitsOnly
+                  ],
+                  validator: (val) => val.isEmpty
+                      ? 'Please enter your electricity usage in KWh'
+                      : null,
+                  onChanged: (val) => setState(
+                    () => _currentElectric = double.parse(val),
+                  ),
+                ),
+              ]),
+          SizedBox(height: 20),
+          Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Monhly Heating Usage in KWh',
+                    style: TextStyle(color: Colors.grey, fontSize: 12)),
+                TextFormField(
+                  style: TextStyle(color: Colors.white),
+                  decoration: textInputDecoration,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: <TextInputFormatter>[
+                    WhitelistingTextInputFormatter.digitsOnly
+                  ],
+                  validator: (val) => val.isEmpty
+                      ? 'Please enter your heating usage in KWh'
+                      : null,
+                  onChanged: (val) => setState(
+                    () => _currentHeating = double.parse(val),
+                  ),
+                ),
+              ]),
+        ],
+      );
+    } else {
+      return Container(height: 0);
+    }
   }
 }

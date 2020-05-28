@@ -48,6 +48,7 @@ class _AddEmissionState extends State<AddEmission> {
   List<Emission> emissions;
   String _currentCity;
 
+  DateTime _time;
   String _emissionIcon;
   String _emissionName;
   String _emissionType;
@@ -57,8 +58,8 @@ class _AddEmissionState extends State<AddEmission> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     bool weight;
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+        future: DatabaseService(uid: user.uid).getUserData(),
         builder: (context, snapshot) {
           UserData userData = snapshot.data;
           emissions = userData.emissions;
@@ -171,10 +172,26 @@ class _AddEmissionState extends State<AddEmission> {
   }
 
   Widget impactValue(String title) {
+    String suffix;
+    String displayValue;
+    Color colour;
+
+    if (_ghGas > 1000) {
+      displayValue = (_ghGas / 1000).toString();
+      suffix = 'KG';
+      colour = Colors.orange;
+    } else {
+      suffix = 'g';
+      displayValue = (_ghGas).toString();
+      colour = Colors.green;
+    }
+    if (_ghGas > 1500) colour = Colors.deepOrange;
+    if (_ghGas > 2000) colour = Colors.red;
+
     return Center(
-      child: Text(title + _ghGas.toString() + "g",
+      child: Text(title + displayValue.toString() + suffix,
           style: TextStyle(
-              color: Colors.red, fontSize: 14, fontWeight: FontWeight.bold)),
+              color: colour, fontSize: 14, fontWeight: FontWeight.bold)),
     );
   }
 
@@ -209,10 +226,16 @@ class _AddEmissionState extends State<AddEmission> {
               decoration: InputDecoration(hintText: 'Distance in miles'),
               onChanged: (val) => setState(() {
                     _emissionType = val;
-
-                    _ghGas =
-                        calcImpact(double.parse(_emissionType), _emissionName)
-                            .toInt();
+                    if (_emissionName == 'Personal Vehicle') {
+                      _ghGas =
+                          personalVehicle(userData, double.parse(_emissionType))
+                              .toInt();
+                      ;
+                    } else {
+                      _ghGas =
+                          calcImpact(double.parse(_emissionType), _emissionName)
+                              .toInt();
+                    }
                   }),
               keyboardType: TextInputType.number),
           SizedBox(height: 15),
@@ -223,6 +246,34 @@ class _AddEmissionState extends State<AddEmission> {
       );
     } else
       return Container(height: 0);
+  }
+
+  double personalVehicle(UserData userData, double distance) {
+    String carSize;
+    double emissions;
+
+    if ((userData.vehicle == 'Car') || (userData.vehicle == 'Motorbike')) {
+      //Determine engine size and vehicle size
+      if (userData.fuel == 'Petrol') {
+        if (userData.engineSize <= 1.4) emissions = distance * 125.5;
+        if (userData.engineSize > 1.4) emissions = distance * 163.3;
+        if (userData.engineSize >= 2.0) emissions = distance * 247.7;
+      }
+      if (userData.fuel == 'Diesel') {
+        if (userData.engineSize <= 1.7) emissions = distance * 110.6;
+        if (userData.engineSize > 1.7) emissions = distance * 138.3;
+        if (userData.engineSize >= 2.0) emissions = distance * 169.2;
+      }
+      if (userData.fuel == 'Electric') emissions = distance * 89;
+    }
+    if (userData.vehicle == 'Bicycle')
+      emissions = calcImpact(distance, 'Bicycle');
+    if (userData.vehicle == 'Scooter')
+      emissions = calcImpact(distance, 'Scooter');
+    if (userData.vehicle == 'Skateboard')
+      emissions = calcImpact(distance, 'Skateboard');
+
+    return emissions;
   }
 
   Widget submitButton(UserData userData, User user) {

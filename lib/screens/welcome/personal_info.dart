@@ -42,8 +42,8 @@ class _PersonalInfoState extends State<PersonalInfo> {
   Widget build(BuildContext context) {
     const timer = const Duration(seconds: 1);
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-      stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+      future: DatabaseService(uid: user.uid).getUserData(),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           UserData userData = snapshot.data;
@@ -173,6 +173,7 @@ class _PersonalInfoState extends State<PersonalInfo> {
                                               style: TextStyle(
                                                   color: Colors.white),
                                               decoration: textInputDecoration,
+                                              autocorrect: true,
                                               validator: (val) => val.isEmpty
                                                   ? 'Please enter a city/location'
                                                   : null,
@@ -258,7 +259,6 @@ class _PersonalInfoState extends State<PersonalInfo> {
             ),
           );
         } else {
-          print('personal info loading');
           return Loading();
         }
       },

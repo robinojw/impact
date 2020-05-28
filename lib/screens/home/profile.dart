@@ -17,8 +17,8 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return StreamBuilder<UserData>(
-        stream: DatabaseService(uid: user.uid).userData,
+    return FutureBuilder<UserData>(
+        future: DatabaseService(uid: user.uid).getUserData(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;

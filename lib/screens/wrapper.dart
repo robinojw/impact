@@ -3,8 +3,10 @@ import 'package:impact/models/impactUser.dart';
 import 'package:impact/screens/authenticate/authenticate.dart';
 import 'package:impact/screens/home/home.dart';
 import 'package:impact/screens/shared/loading.dart';
+import 'package:impact/screens/welcome/energy_info.dart';
 import 'package:impact/screens/welcome/get_started.dart';
 import 'package:impact/screens/welcome/personal_info.dart';
+import 'package:impact/screens/welcome/vechicle-info.dart';
 import 'package:impact/services/database.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:provider/provider.dart';
@@ -14,31 +16,25 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    int onboarding = 0;
 
     if (user != null) {
-      return StreamBuilder(
-          stream: DatabaseService(uid: user.uid).userData,
+      return FutureBuilder(
+          future: DatabaseService(uid: user.uid).getUserData(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               UserData userData = snapshot.data;
-
-              if (user.uid == null) {
-                return Authenticate();
+              if ((userData.username == '') && (userData.energy != ' ')) {
+                return PersonalInfo();
               } else {
-                if (userData.name == '') {
-                  //Change to if userData.emissions.isEmpty
-                  return PersonalInfo();
-                } else {
-                  return Home();
-                }
+                return Home();
               }
             } else {
-              print("Wrapper $snapshot.error");
-              return GetStarted();
+              return Authenticate();
             }
           });
+    } else {
+      return GetStarted();
     }
-
-    return Authenticate();
   }
 }
