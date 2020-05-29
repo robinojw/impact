@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_circular_chart/flutter_circular_chart.dart';
@@ -17,7 +18,7 @@ class Insights extends StatefulWidget {
 class _InsightsState extends State<Insights> {
   final GlobalKey<AnimatedCircularChartState> _chartKey =
       new GlobalKey<AnimatedCircularChartState>();
-  Widget insightsChart = InsightsChart.withSampleData();
+
   int currentTab = 0;
   double totalEmissions = 0;
   double averageEmissions = 0;
@@ -34,14 +35,16 @@ class _InsightsState extends State<Insights> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
-            for (var item in userData.emissions) {
-              if (listIndex < userData.emissions.length) {
+            newList = currentPeriod(currentTab, userData.emissions);
+            Widget insightsChart = InsightsChart.loadData(newList);
+            calcDay(newList, userData);
+            for (var item in newList) {
+              if (listIndex < newList.length) {
                 totalEmissions += item.ghGas;
-
                 listIndex++;
               }
             }
-            // newList = currentPeriod(currentTab, userData.emissions);
+
             return SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(10),
@@ -49,7 +52,7 @@ class _InsightsState extends State<Insights> {
                   SizedBox(height: 40),
                   viewSlider(userData.emissions),
                   SizedBox(height: 10),
-                  Container(height: 200, child: insightsChart),
+                  Container(height: 220, child: insightsChart),
                   SizedBox(height: 20),
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,9 +67,7 @@ class _InsightsState extends State<Insights> {
                       child: Text("Today's Emissions",
                           style: TextStyle(color: Colors.white, fontSize: 14))),
                   SizedBox(height: 10),
-                  SizedBox(
-                      height: containerHeight,
-                      child: cardList(userData.emissions)),
+                  SizedBox(height: containerHeight, child: cardList(newList)),
                 ]),
               ),
             );
@@ -106,14 +107,13 @@ class _InsightsState extends State<Insights> {
         onValueChanged: (int newVal) {
           setState(() {
             currentTab = newVal;
-            // newList = currentPeriod(currentTab, emissions);
           });
         });
   }
 
   Widget leftCard(UserData userData) {
     if (averageEmissions == 0) {
-      averageEmissions = 3520;
+      averageEmissions = 8000;
     }
     var remaining = averageEmissions - totalEmissions;
 
@@ -275,7 +275,19 @@ class _InsightsState extends State<Insights> {
         },
       );
     } else {
-      return Container(height: 0);
+      containerHeight = 75;
+      return Container(
+        width: 400,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: const Color(0xD9252740)),
+        child: Padding(
+            padding: const EdgeInsets.only(top: 0, bottom: 0),
+            child: Center(
+              child: Text('No Emissions Data',
+                  style: TextStyle(color: Colors.white)),
+            )),
+      );
     }
   }
 
@@ -283,7 +295,6 @@ class _InsightsState extends State<Insights> {
   Widget cardTile(Emission emission, int length) {
     Icon _emissionIcon;
 
-    print(emission.toJson());
     _emissionIcon = getIcon(emission.emissionIcon);
 
     return Padding(
@@ -406,55 +417,75 @@ class _InsightsState extends State<Insights> {
     }
   }
 
-  // List<Emission> currentPeriod(int tab, List<Emission> emissions) {
-  //   DateTime period = DateTime.now();
-  //   List<Emission> timeList = new List<Emission>();
-  //   List<Emission> dummy = new List<Emission>();
+  List<Emission> currentPeriod(int tab, List<Emission> emissions) {
+    DateTime period = DateTime.now();
+    List<Emission> timeList = new List<Emission>();
+    List<Emission> dummy = new List<Emission>();
 
-  //   if (emissions != null) {
-  //     if (tab == 0) {
-  //       for (var i in emissions) {
-  //         if ((i.time != null) &&
-  //             (i.time.day == period.day) &&
-  //             (i.time.month == period.month) &&
-  //             (i.time.year == period.year)) {
-  //           timeList.add(i);
-  //         }
-  //       }
-  //     }
-  //     if (tab == 1) {
-  //       int weekNumber(DateTime date) {
-  //         int dayOfYear = int.parse(DateFormat("D").format(date));
-  //         return ((dayOfYear - date.weekday + 10) / 7).floor();
-  //       }
+    if (emissions != null) {
+      if (tab == 0) {
+        for (var i in emissions) {
+          if ((i.time != null) &&
+              (i.time.day == period.day) &&
+              (i.time.month == period.month) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 1) {
+        int weekNumber(DateTime date) {
+          int dayOfYear = int.parse(DateFormat("D").format(date));
+          return ((dayOfYear - date.weekday + 10) / 7).floor();
+        }
 
-  //       for (var i in emissions) {
-  //         var eWeek = weekNumber(i.time);
-  //         var thisWeek = weekNumber(period);
-  //         if ((i.time != null) &&
-  //             (eWeek == thisWeek) &&
-  //             (i.time.year == period.year)) {
-  //           timeList.add(i);
-  //         }
-  //       }
-  //     }
-  //     if (tab == 2) {
-  //       for (var i in emissions) {
-  //         if ((i.time != null) &&
-  //             (i.time.month != period.month) &&
-  //             (i.time.year != period.year)) {
-  //           timeList.add(i);
-  //         }
-  //       }
-  //     }
-  //     if (tab == 3) {
-  //       for (var i in emissions) {
-  //         if ((i.time != null) && (i.time.year != period.year)) timeList.add(i);
-  //       }
-  //     }
-  //     print(timeList);
-  //     return timeList;
-  //   } else
-  //     return dummy;
-  // }
+        for (var i in emissions) {
+          var eWeek = weekNumber(i.time);
+          var thisWeek = weekNumber(period);
+          if ((i.time != null) &&
+              (eWeek == thisWeek) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 2) {
+        for (var i in emissions) {
+          if ((i.time != null) &&
+              (i.time.month == period.month) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 3) {
+        for (var i in emissions) {
+          if ((i.time != null) && (i.time.year == period.year)) timeList.add(i);
+        }
+      }
+      return timeList;
+    } else
+      return dummy;
+  }
+
+  List<Emission> calcDay(newList, UserData userData) {
+    newList.add(
+      Emission(
+          time: DateTime.now(),
+          emissionIcon: 'flash_on',
+          emissionName: 'Electricity',
+          emissionType:
+              ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
+          ghGas: ((userData.electric * 300) ~/ 31)),
+    );
+
+    newList.add(Emission(
+        time: DateTime.now(),
+        emissionIcon: 'whatshot',
+        emissionName: 'Gas',
+        emissionType:
+            ((userData.heating / 31).roundToDouble()).toString() + " KWh",
+        ghGas: ((userData.heating * 203) ~/ 31)));
+    return newList;
+  }
 }

@@ -37,7 +37,7 @@ class _ImproveState extends State<Improve> {
                       ),
                     ])));
           } else {
-            return Loading();
+            return Container(height: 0);
           }
         });
   }

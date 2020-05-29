@@ -94,6 +94,7 @@ class DatabaseService {
   List<Emission> _emissionListFromSnapshot(DocumentSnapshot snapshot) {
     return snapshot.data['emissions'].map((doc) {
       return Emission(
+        time: doc.data['time'] ?? "",
         emissionIcon: doc.data['emissionIcon'] ?? "",
         emissionName: doc.data['emissionName'] ?? "",
         emissionType: doc.data['emissionType'] ?? "",

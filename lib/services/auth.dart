@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:impact/models/user.dart';
 import 'package:impact/services/database.dart';
@@ -22,24 +23,28 @@ class AuthService {
       FirebaseUser user = result.user;
       List<Emission> emissions = [
         Emission(
+            time: DateTime.now(),
             emissionIcon: "directions_bike",
             emissionName: "E-Bike Journey",
             emissionType: "7",
             ghGas: 30),
         Emission(
+            time: DateTime.now(),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
             emissionType: "5.6",
             ghGas: 160),
         Emission(
+            time: DateTime.now(),
             emissionIcon: "train",
             emissionName: "Train Journey",
             emissionType: "112",
             ghGas: 643),
         Emission(
-            emissionIcon: "Car",
-            emissionName: "Train Journey",
-            emissionType: "112",
+            time: DateTime.now(),
+            emissionIcon: "archive",
+            emissionName: "Cardboard Box",
+            emissionType: "Cardboard and Paper",
             ghGas: 200)
       ];
       await DatabaseService(uid: user.uid).updateUserData(
@@ -49,8 +54,8 @@ class AuthService {
         'No engine or motor',
         0,
         0,
-        '',
-        '',
+        'Gas',
+        'Grid',
         0,
         0,
         'I don\'t commute to work or school',

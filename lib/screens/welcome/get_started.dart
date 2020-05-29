@@ -51,7 +51,7 @@ class GetStarted extends StatelessWidget {
                     color: Colors.white,
                     textColor: Colors.black,
                     onPressed: () {
-                      Navigator.pushNamed(context, register);
+                      Navigator.pushNamed(context, auth);
                     },
                   ),
                 ),

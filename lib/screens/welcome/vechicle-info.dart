@@ -176,6 +176,9 @@ class _VehicleInfoState extends State<VehicleInfo> {
                                               onPressed: () async {
                                                 Navigator.pushNamed(
                                                     context, energy);
+
+                                                if (_currentMpg == 0)
+                                                  _currentMpg = 45;
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(
@@ -241,13 +244,20 @@ class _VehicleInfoState extends State<VehicleInfo> {
         TextFormField(
           style: TextStyle(color: Colors.white),
           decoration: textInputDecoration,
-          keyboardType: TextInputType.number,
-          inputFormatters: <TextInputFormatter>[
-            WhitelistingTextInputFormatter.digitsOnly
-          ],
+          keyboardType: TextInputType.text,
           validator: (val) => val.isEmpty ? 'Please enter a engine size' : null,
           onChanged: (val) =>
               setState(() => _currentEngineSize = double.parse(val)),
+        ),
+        SizedBox(height: 10),
+        Text('Vehicle Mpg', style: TextStyle(color: Colors.grey, fontSize: 12)),
+        TextFormField(
+          style: TextStyle(color: Colors.white),
+          decoration: textInputDecoration,
+          keyboardType: TextInputType.text,
+          validator: (val) =>
+              val.isEmpty ? 'Please enter your vehicle\'s Mpg' : null,
+          onChanged: (val) => setState(() => _currentMpg = int.parse(val)),
         ),
       ]);
     } else {

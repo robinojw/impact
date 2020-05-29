@@ -7,6 +7,7 @@ import 'package:impact/screens/welcome/energy_info.dart';
 import 'package:impact/screens/welcome/get_started.dart';
 import 'package:impact/screens/welcome/personal_info.dart';
 import 'package:impact/screens/welcome/vechicle-info.dart';
+import 'package:impact/services/auth.dart';
 import 'package:impact/services/database.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:provider/provider.dart';
@@ -16,25 +17,28 @@ class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    int onboarding = 0;
+    final AuthService _auth = AuthService();
 
-    if (user != null) {
+    if (user == null) {
+      return GetStarted();
+    } else {
       return FutureBuilder(
           future: DatabaseService(uid: user.uid).getUserData(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               UserData userData = snapshot.data;
-              if ((userData.username == '') && (userData.energy != ' ')) {
+              if ((userData.username == '') ||
+                  (userData.energy == '') ||
+                  (userData.electric == 0.0)) {
                 return PersonalInfo();
               } else {
                 return Home();
               }
             } else {
-              return Authenticate();
+              print(snapshot.error);
+              return GetStarted();
             }
           });
-    } else {
-      return GetStarted();
     }
   }
 }

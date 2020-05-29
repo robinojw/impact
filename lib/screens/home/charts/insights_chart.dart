@@ -1,6 +1,7 @@
-/// Example of a simple line chart.
+/// Timeseries chart example
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:flutter/material.dart';
+import 'package:impact/models/user.dart';
 
 class InsightsChart extends StatelessWidget {
   final List<charts.Series> seriesList;
@@ -8,45 +9,47 @@ class InsightsChart extends StatelessWidget {
 
   InsightsChart(this.seriesList, {this.animate});
 
-  /// Creates a [LineChart] with sample data and no transition.
-  factory InsightsChart.withSampleData() {
+  /// Creates a [TimeSeriesChart] with sample data and no transition.
+  factory InsightsChart.loadData(List<Emission> emissions) {
     return new InsightsChart(
-      _createSampleData(),
+      _createData(emissions),
+
       // Disable animations for image tests.
-      animate: false,
+      animate: true,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(seriesList, animate: animate);
+    return new charts.TimeSeriesChart(
+      seriesList,
+      animate: animate,
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+          renderSpec: new charts.GridlineRendererSpec(
+        labelAnchor: charts.TickLabelAnchor.centered,
+        labelJustification: charts.TickLabelJustification.inside,
+      )),
+      dateTimeFactory: const charts.LocalDateTimeFactory(),
+      defaultRenderer: charts.LineRendererConfig(
+        includePoints: true,
+      ),
+    );
   }
 
   /// Create one series with sample hard coded data.
-  static List<charts.Series<LinearSales, int>> _createSampleData() {
-    final data = [
-      new LinearSales(0, 50),
-      new LinearSales(1, 25),
-      new LinearSales(2, 100),
-      new LinearSales(3, 75),
-    ];
+  static List<charts.Series<Emission, DateTime>> _createData(
+      List<Emission> emissions) {
+    final data = emissions;
 
     return [
-      new charts.Series<LinearSales, int>(
-        id: 'Sales',
+      new charts.Series<Emission, DateTime>(
+        id: 'Emission',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-        domainFn: (LinearSales sales, _) => sales.year,
-        measureFn: (LinearSales sales, _) => sales.sales,
+        patternColorFn: (_, __) => charts.MaterialPalette.white,
+        domainFn: (Emission emission, _) => emission.time,
+        measureFn: (Emission emission, _) => emission.ghGas,
         data: data,
       )
     ];
   }
-}
-
-/// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
-
-  LinearSales(this.year, this.sales);
 }

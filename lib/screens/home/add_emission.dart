@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:impact/models/user.dart';
 import 'package:impact/services/database.dart';
@@ -63,41 +64,44 @@ class _AddEmissionState extends State<AddEmission> {
         builder: (context, snapshot) {
           UserData userData = snapshot.data;
           emissions = userData.emissions;
-          return Container(
-              child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text("Add an emission",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-              SizedBox(height: 10),
-              Container(
-                width: 340,
-                child: DropdownButton(
-                  isExpanded: true,
-                  hint: Text("Emission Type"),
-                  value: emissionValue,
-                  items: emissionType.map((value) {
-                    return DropdownMenuItem(
-                      child: Text(value),
-                      value: value,
-                    );
-                  }).toList(),
-                  onChanged: (value) {
-                    setState(() {
-                      if (value == 'Travel') {
-                        _emissionName = 'Personal Vehicle';
-                      } else {
-                        _emissionName = 'Coffee Cup';
-                      }
-                      emissionValue = value;
-                    });
-                  },
+          return SingleChildScrollView(
+            child: Container(
+                child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text("Add an emission",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                SizedBox(height: 10),
+                Container(
+                  width: 340,
+                  child: DropdownButton(
+                    isExpanded: true,
+                    hint: Text("Emission Type"),
+                    value: emissionValue,
+                    items: emissionType.map((value) {
+                      return DropdownMenuItem(
+                        child: Text(value),
+                        value: value,
+                      );
+                    }).toList(),
+                    onChanged: (value) {
+                      setState(() {
+                        if (value == 'Travel') {
+                          _emissionName = 'Personal Vehicle';
+                        } else {
+                          _emissionName = 'Coffee Cup';
+                        }
+                        emissionValue = value;
+                      });
+                    },
+                  ),
                 ),
-              ),
-              travelEmission(userData),
-              packagingEmission(userData, weight, user),
-            ],
-          ));
+                travelEmission(userData),
+                packagingEmission(userData, weight, user),
+              ],
+            )),
+          );
         });
   }
 
@@ -230,7 +234,6 @@ class _AddEmissionState extends State<AddEmission> {
                       _ghGas =
                           personalVehicle(userData, double.parse(_emissionType))
                               .toInt();
-                      ;
                     } else {
                       _ghGas =
                           calcImpact(double.parse(_emissionType), _emissionName)
@@ -291,6 +294,7 @@ class _AddEmissionState extends State<AddEmission> {
               textColor: Colors.white,
               onPressed: () async {
                 emissions.add(new Emission(
+                    time: DateTime.now(),
                     emissionIcon: _emissionIcon,
                     emissionName: _emissionName,
                     emissionType: _emissionType,

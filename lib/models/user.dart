@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class User {
   final String uid;
-
   User({this.uid});
 }
 
@@ -77,15 +76,21 @@ class UserData {
 }
 
 class Emission {
+  DateTime time;
   final String emissionIcon;
   final String emissionName;
   final String emissionType;
   final int ghGas;
 
   Emission(
-      {this.emissionIcon, this.emissionName, this.emissionType, this.ghGas});
+      {this.time,
+      this.emissionIcon,
+      this.emissionName,
+      this.emissionType,
+      this.ghGas});
 
   factory Emission.fromJson(Map<String, dynamic> json) => Emission(
+        time: (json['time'] as Timestamp).toDate(),
         emissionIcon: json["emissionIcon"],
         emissionName: json["emissionName"],
         emissionType: json["emissionType"],
@@ -94,6 +99,7 @@ class Emission {
 
   Map<String, dynamic> toJson() {
     return {
+      'time': time,
       'emissionIcon': emissionIcon,
       'emissionName': emissionName,
       'emissionType': emissionType,

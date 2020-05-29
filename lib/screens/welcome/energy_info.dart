@@ -32,7 +32,6 @@ class _EnergyInfoState extends State<EnergyInfo> {
   bool _value = false;
 
   final List<String> energySources = [
-    ' ',
     'Gas',
     'Oil',
     'Solar',
@@ -41,7 +40,6 @@ class _EnergyInfoState extends State<EnergyInfo> {
   ];
 
   final List<String> electricitySources = [
-    ' ',
     'Grid',
     'Renewable Grid',
     'Solar',
@@ -198,6 +196,12 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                               color: const Color(0XFF1451DB),
                                               textColor: Colors.white,
                                               onPressed: () async {
+                                                if ((_currentElectric == 0) ||
+                                                    (_currentHeating == 0)) {
+                                                  _currentElectric = 909.0;
+                                                  _currentHeating = 1023.0;
+                                                }
+
                                                 if (_formKey.currentState
                                                     .validate()) {
                                                   await DatabaseService(

@@ -56,10 +56,12 @@ class _ProfileState extends State<Profile> {
     return Column(children: <Widget>[
       Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
         IconButton(
-            icon: Icon(Icons.edit),
+            icon: Icon(Icons.exit_to_app),
             iconSize: 24,
             color: Colors.white,
-            onPressed: () {})
+            onPressed: () {
+              AuthService().signOut();
+            })
       ]),
       new Container(
           width: 120.0,
@@ -90,7 +92,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Icon(Icons.flash_on, color: Colors.white),
             SizedBox(height: 5),
-            Text((userData.electric.toInt()).toString() + " Kwh",
+            Text((userData.electric).toString() + " Kwh",
                 style: TextStyle(color: Colors.white, fontSize: 14))
           ],
         ),
@@ -98,7 +100,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Icon(Icons.whatshot, color: Colors.white),
             SizedBox(height: 5),
-            Text((userData.heating.toInt()).toString() + " Kwh",
+            Text((userData.heating).toString() + " Kwh",
                 style: TextStyle(color: Colors.white, fontSize: 14))
           ],
         ),
