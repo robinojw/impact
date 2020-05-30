@@ -197,9 +197,10 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                               textColor: Colors.white,
                                               onPressed: () async {
                                                 if ((_currentElectric == 0) ||
-                                                    (_currentHeating == 0)) {
-                                                  _currentElectric = 909.0;
-                                                  _currentHeating = 1023.0;
+                                                    (_currentHeating == 0) ||
+                                                    (_value = false)) {
+                                                  _currentElectric = 248.0;
+                                                  _currentHeating = 992.0;
                                                 }
 
                                                 if (_formKey.currentState

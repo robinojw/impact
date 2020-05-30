@@ -234,6 +234,7 @@ class _AddEmissionState extends State<AddEmission> {
                       _ghGas =
                           personalVehicle(userData, double.parse(_emissionType))
                               .toInt();
+                      _emissionIcon = userData.vehicle;
                     } else {
                       _ghGas =
                           calcImpact(double.parse(_emissionType), _emissionName)
@@ -297,7 +298,7 @@ class _AddEmissionState extends State<AddEmission> {
                     time: DateTime.now(),
                     emissionIcon: _emissionIcon,
                     emissionName: _emissionName,
-                    emissionType: _emissionType,
+                    emissionType: (_emissionType.toString() + " Miles"),
                     ghGas: _ghGas));
 
                 await DatabaseService(uid: user.uid).updateUserData(

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:image_sequence_animator/image_sequence_animator.dart';
+
 import 'package:impact/models/user.dart';
 import 'package:impact/screens/home/add_emission.dart';
 import 'package:impact/screens/home/charts/day_chart.dart';
@@ -10,7 +10,8 @@ import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/services/auth.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:impact/services/database.dart';
-import 'package:nima/nima_actor.dart';
+import 'package:location/location.dart';
+
 import 'package:provider/provider.dart';
 
 class Impact extends StatefulWidget {
@@ -25,6 +26,7 @@ class _ImpactState extends State<Impact> {
   int listIndex = 0;
   int totalEmissions = 0;
   List<Emission> newList;
+  List<Emission> empty = List<Emission>();
 
   @override
   Widget build(BuildContext context) {
@@ -59,42 +61,59 @@ class _ImpactState extends State<Impact> {
             UserData userData = snapshot.data;
             newList = currentPeriod(userData.emissions);
             calcDay(newList, userData);
-            Widget chart = InsightsChart.loadData(newList);
+            // Widget chart = InsightsChart.loadData(newList, empty);
             return Container(
               height: MediaQuery.of(context).size.height - 84,
-              padding: EdgeInsets.all(10),
               child: Stack(children: <Widget>[
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    SizedBox(height: 20),
-                    Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text('Your impact levels are',
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 16.0)),
-                          ButtonTheme(
-                              minWidth: 0,
-                              padding: EdgeInsets.all(0),
-                              child: IconButton(
-                                padding: EdgeInsets.all(0),
-                                onPressed: () => _addEmission(),
-                                icon: Icon(Icons.add,
-                                    color: Colors.white, size: 24.0),
-                              ))
-                        ]),
-                    Text('Average',
-                        style: TextStyle(
-                            height: 0.5, color: Colors.yellow, fontSize: 16.0)),
-                    Container(height: 345, width: 400, child: animation()),
-                    total(newList),
+                    SizedBox(height: 35),
+                    Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text('Your impact levels are',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16.0)),
+                                    Container(
+                                        padding: EdgeInsets.all(0),
+                                        width: 25,
+                                        child: IconButton(
+                                          padding: EdgeInsets.all(0),
+                                          onPressed: () => _addEmission(),
+                                          icon: Icon(Icons.add,
+                                              color: Colors.white, size: 26.0),
+                                        ))
+                                  ]),
+                              Text('Average',
+                                  style: TextStyle(
+                                      height: 0.5,
+                                      color: Colors.yellow,
+                                      fontSize: 16.0)),
+                            ])),
+                    Container(height: 335, width: 400, child: animation()),
+                    Padding(
+                        padding: EdgeInsets.only(left: 10, right: 10),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            total(newList),
+                            // SizedBox(height: 20),
+                            // Align(
+                            //     alignment: Alignment.bottomCenter,
+                            //     child: SizedBox(height: 200, child: chart)),
+                          ],
+                        )),
                   ],
                 ),
-                SizedBox(height: 20),
-                Align(
-                    alignment: Alignment.bottomCenter,
-                    child: SizedBox(height: 210, child: chart)),
               ]),
             );
           } else {
@@ -105,7 +124,7 @@ class _ImpactState extends State<Impact> {
 
   Widget animation() {
     return Image.asset('assets/impact.gif',
-        alignment: Alignment.center, fit: BoxFit.cover);
+        alignment: Alignment.center, fit: BoxFit.fitHeight);
   }
 
   Widget total(List<Emission> emissions) {
@@ -159,23 +178,33 @@ class _ImpactState extends State<Impact> {
   }
 
   List<Emission> calcDay(newList, UserData userData) {
-    newList.add(
-      Emission(
-          time: DateTime.now(),
-          emissionIcon: 'flash_on',
-          emissionName: 'Electricity',
-          emissionType:
-              ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
-          ghGas: ((userData.electric * 300) ~/ 31)),
-    );
+    for (int i = 0; i < 25; i++) {
+      var year = DateTime.now().year;
+      var month = DateTime.now().month;
+      var day = DateTime.now().day;
 
-    newList.add(Emission(
-        time: DateTime.now(),
-        emissionIcon: 'whatshot',
-        emissionName: 'Gas',
-        emissionType:
-            ((userData.heating / 31).roundToDouble()).toString() + " KWh",
-        ghGas: ((userData.heating * 203) ~/ 31)));
+      var hour = new DateTime(year, month, day, i, 0);
+      // print(hour);
+      newList.add(
+        Emission(
+            time: hour,
+            emissionIcon: 'flash_on',
+            emissionName: 'Electricity',
+            emissionType:
+                ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
+            ghGas: (((userData.electric * 300) ~/ 31) ~/ 24)),
+      );
+
+      newList.add(Emission(
+          time: hour,
+          emissionIcon: 'whatshot',
+          emissionName: 'Gas',
+          emissionType:
+              (((userData.heating / 31) / 24).roundToDouble()).toString() +
+                  " KWh",
+          ghGas: (((userData.heating * 203) ~/ 31) ~/ 24)));
+    }
+
     return newList;
   }
 }

@@ -10,12 +10,12 @@ class InsightsChart extends StatelessWidget {
   InsightsChart(this.seriesList, {this.animate});
 
   /// Creates a [TimeSeriesChart] with sample data and no transition.
-  factory InsightsChart.loadData(List<Emission> emissions) {
+  factory InsightsChart.loadData(List<Emission> emissions, energy, electric) {
     return new InsightsChart(
-      _createData(emissions),
+      _createData(emissions, energy, electric),
 
       // Disable animations for image tests.
-      animate: true,
+      animate: false,
     );
   }
 
@@ -31,24 +31,42 @@ class InsightsChart extends StatelessWidget {
       )),
       dateTimeFactory: const charts.LocalDateTimeFactory(),
       defaultRenderer: charts.LineRendererConfig(
-        includePoints: true,
+        includePoints: false,
       ),
     );
   }
 
   /// Create one series with sample hard coded data.
   static List<charts.Series<Emission, DateTime>> _createData(
-      List<Emission> emissions) {
+      List<Emission> emissions,
+      List<Emission> energy,
+      List<Emission> electric) {
     final data = emissions;
 
     return [
+      new charts.Series<Emission, DateTime>(
+        id: 'Emission',
+        colorFn: (_, __) => charts.MaterialPalette.green.shadeDefault,
+        patternColorFn: (_, __) => charts.MaterialPalette.white,
+        domainFn: (Emission emission, _) => emission.time,
+        measureFn: (Emission emission, _) => emission.ghGas,
+        data: data,
+      ),
+      new charts.Series<Emission, DateTime>(
+        id: 'Emission',
+        colorFn: (_, __) => charts.MaterialPalette.red.shadeDefault,
+        patternColorFn: (_, __) => charts.MaterialPalette.white,
+        domainFn: (Emission emission, _) => emission.time,
+        measureFn: (Emission emission, _) => emission.ghGas,
+        data: energy,
+      ),
       new charts.Series<Emission, DateTime>(
         id: 'Emission',
         colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
         patternColorFn: (_, __) => charts.MaterialPalette.white,
         domainFn: (Emission emission, _) => emission.time,
         measureFn: (Emission emission, _) => emission.ghGas,
-        data: data,
+        data: electric,
       )
     ];
   }

@@ -247,31 +247,31 @@ class _ProfileState extends State<Profile> {
 
   Icon getIcon(String icon) {
     switch (icon) {
-      case 'directions_bike':
+      case 'Bicycle':
         return Icon(
           Icons.directions_bike,
           color: Colors.white,
           size: 29,
         );
-      case 'directions_subway':
+      case 'Underground':
         return Icon(
           Icons.directions_subway,
           color: Colors.white,
           size: 29,
         );
-      case 'directions_bus':
+      case 'Bus':
         return Icon(
           Icons.directions_bus,
           color: Colors.white,
           size: 29,
         );
-      case 'train':
+      case 'Train':
         return Icon(
           Icons.train,
           color: Colors.white,
           size: 29,
         );
-      case 'directions_car':
+      case 'Car':
         return Icon(
           Icons.directions_car,
           color: Colors.white,
@@ -283,7 +283,7 @@ class _ProfileState extends State<Profile> {
           color: Colors.white,
           size: 29,
         );
-      case 'motorcycle':
+      case 'Motorbike':
         return Icon(
           Icons.motorcycle,
           color: Colors.white,
@@ -295,7 +295,7 @@ class _ProfileState extends State<Profile> {
           color: Colors.white,
           size: 29,
         );
-      case 'flight':
+      case 'Airplane':
         return Icon(
           Icons.flight,
           color: Colors.white,

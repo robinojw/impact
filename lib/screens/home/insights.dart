@@ -26,6 +26,8 @@ class _InsightsState extends State<Insights> {
   int listIndex = 0;
 
   List<Emission> newList;
+  List<List<Emission>> dayList;
+  List<Emission> emissionList;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +37,12 @@ class _InsightsState extends State<Insights> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
+            emissionList = userData.emissions;
+            emissionList = addEnergy(userData, emissionList);
             newList = currentPeriod(currentTab, userData.emissions);
-            Widget insightsChart = InsightsChart.loadData(newList);
-            calcDay(newList, userData);
+            dayList = calcDay(userData);
+            Widget insightsChart =
+                InsightsChart.loadData(newList, dayList[0], dayList[1]);
             for (var item in newList) {
               if (listIndex < newList.length) {
                 totalEmissions += item.ghGas;
@@ -67,7 +72,8 @@ class _InsightsState extends State<Insights> {
                       child: Text("Today's Emissions",
                           style: TextStyle(color: Colors.white, fontSize: 14))),
                   SizedBox(height: 10),
-                  SizedBox(height: containerHeight, child: cardList(newList)),
+                  SizedBox(
+                      height: containerHeight, child: cardList(emissionList)),
                 ]),
               ),
             );
@@ -317,6 +323,48 @@ class _InsightsState extends State<Insights> {
 
   Icon getIcon(String icon) {
     switch (icon) {
+      case 'flash_on':
+        return Icon(
+          Icons.flash_on,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'whatshot':
+        return Icon(
+          Icons.whatshot,
+          color: Colors.grey,
+          size: 29,
+        );
+      case 'Bicycle':
+        return Icon(
+          Icons.directions_bike,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'Underground':
+        return Icon(
+          Icons.directions_subway,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'Bus':
+        return Icon(
+          Icons.directions_bus,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'Train':
+        return Icon(
+          Icons.train,
+          color: Colors.white,
+          size: 29,
+        );
+      case 'Car':
+        return Icon(
+          Icons.directions_car,
+          color: Colors.white,
+          size: 29,
+        );
       case 'directions_bike':
         return Icon(
           Icons.directions_bike,
@@ -468,24 +516,60 @@ class _InsightsState extends State<Insights> {
       return dummy;
   }
 
-  List<Emission> calcDay(newList, UserData userData) {
-    newList.add(
+  List<Emission> addEnergy(UserData userData, List<Emission> list) {
+    list.add(
       Emission(
           time: DateTime.now(),
           emissionIcon: 'flash_on',
           emissionName: 'Electricity',
           emissionType:
               ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
-          ghGas: ((userData.electric * 300) ~/ 31)),
+          ghGas: (userData.electric * 300) ~/ 31),
     );
 
-    newList.add(Emission(
+    list.add(Emission(
         time: DateTime.now(),
         emissionIcon: 'whatshot',
         emissionName: 'Gas',
         emissionType:
             ((userData.heating / 31).roundToDouble()).toString() + " KWh",
-        ghGas: ((userData.heating * 203) ~/ 31)));
-    return newList;
+        ghGas: (userData.heating * 203) ~/ 31));
+
+    return list;
+  }
+
+  List<List<Emission>> calcDay(UserData userData) {
+    List<Emission> electric = new List<Emission>();
+    List<Emission> energy = new List<Emission>();
+
+    for (int i = 0; i < 25; i++) {
+      var year = DateTime.now().year;
+      var month = DateTime.now().month;
+      var day = DateTime.now().day;
+
+      var hour = new DateTime(year, month, day, i, 0);
+
+      electric.add(
+        Emission(
+            time: hour,
+            emissionIcon: 'flash_on',
+            emissionName: 'Electricity',
+            emissionType:
+                (((userData.electric / 31) / 24).roundToDouble()).toString() +
+                    ' KWh',
+            ghGas: (((userData.electric * 300) ~/ 31) ~/ 24)),
+      );
+
+      energy.add(Emission(
+          time: hour,
+          emissionIcon: 'whatshot',
+          emissionName: 'Gas',
+          emissionType:
+              (((userData.heating / 31) / 24).roundToDouble()).toString() +
+                  " KWh",
+          ghGas: (((userData.heating * 203) ~/ 31) ~/ 24)));
+    }
+
+    return [electric, energy];
   }
 }

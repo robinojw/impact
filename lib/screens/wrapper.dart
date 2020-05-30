@@ -27,9 +27,9 @@ class Wrapper extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               UserData userData = snapshot.data;
-              if ((userData.username == '') ||
-                  (userData.energy == '') ||
-                  (userData.electric == 0.0)) {
+              if ((userData.username == '') &&
+                  (userData.energy == '') &&
+                  (userData.electric == 0)) {
                 return PersonalInfo();
               } else {
                 return Home();

@@ -1,5 +1,6 @@
 name: impact
 description: A new Flutter project.
+publish_to: "none"
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -31,12 +32,20 @@ dependencies:
   charts_flutter: ^0.9.0
   flutter_circular_chart: ^0.1.0
   flutter_launcher_icons: ^0.7.5
-  flare_flutter: ^2.0.3
-  image_sequence_animator: ^1.0.6
-  nima: ^1.0.5
-  jiffy: ^3.0.1
+  location: ^3.0.0
+  google_maps_flutter: ^0.5.28+1
+  http: ^0.12.0+1
+  json_serializable: ^3.3.0
+  flutter_polyline_points: ^0.2.1
+  google_maps_webservice: ^0.0.16
+  geolocator: ^3.0.1
+  latlong: ^0.6.1
+  path_provider: ^1.6.9
+  duration: ^2.0.12
 
 dev_dependencies:
+  pedantic: ^1.9.0
+  build_runner: ^1.10.0
   flutter_test:
     sdk: flutter
 
@@ -73,71 +82,6 @@ flutter:
     - assets/default-profile.png
     - assets/underground.png
     - assets/impact-pic.png
-    # - assets/sequence/
-    # - assets/impact-2/
-    # - assets/impact-21/
-    # - assets/impact-2/impact-2.nma
-    # - assets/impact-2/impact-20.png
-    # - assets/impact-2/impact-21.png
-    # - assets/impact-2/impact-22.png
-    # - assets/impact-2/impact-23.png
-    # - assets/impact-2/impact-24.png
-    # - assets/impact-2/impact-25.png
-    # - assets/impact-2/impact-26.png
-    # - assets/impact-2/impact-27.png
-    # - assets/impact-2/impact-28.png
-    # - assets/impact-2/impact-29.png
-    # - assets/impact-2/impact-210.png
-    # - assets/impact-2/impact-211.png
-    # - assets/impact-2/impact-212.png
-    # - assets/impact-2/impact-213.png
-    # - assets/impact-2/impact-214.png
-    # - assets/impact-2/impact-215.png
-    # - assets/impact-2/impact-216.png
-    # - assets/impact-2/impact-217.png
-    # - assets/impact-2/impact-218.png
-    # - assets/impact-2/impact-219.png
-    # - assets/impact-2/impact-220.png
-    # - assets/impact-2/impact-221.png
-    # - assets/impact-2/impact-222.png
-    # - assets/impact-2/impact-223.png
-    # - assets/impact-2/impact-224.png
-    # - assets/impact-2/impact-225.png
-    # - assets/impact-2/impact-226.png
-    # - assets/impact-2/impact-227.png
-    # - assets/impact-2/impact-228.png
-    # - assets/impact-2/impact-229.png
-    # - assets/impact-2/impact-230.png
-    # - assets/impact-2/impact-231.png
-    # - assets/impact-2/impact-232.png
-    # - assets/impact-2/impact-233.png
-    # - assets/impact-2/impact-234.png
-    # - assets/impact-2/impact-235.png
-    # - assets/impact-2/impact-236.png
-    # - assets/impact-2/impact-237.png
-    # - assets/impact-2/impact-238.png
-    # - assets/impact-2/impact-239.png
-    # - assets/impact-2/impact-240.png
-    # - assets/impact-2/impact-241.png
-    # - assets/impact-2/impact-242.png
-    # - assets/impact-2/impact-243.png
-    # - assets/impact-2/impact-244.png
-    # - assets/impact-2/impact-245.png
-    # - assets/impact-2/impact-246.png
-    # - assets/impact-2/impact-247.png
-    # - assets/impact-2/impact-248.png
-    # - assets/impact-2/impact-249.png
-    # - assets/impact-2/impact-250.png
-    # - assets/impact-2/impact-251.png
-    # - assets/impact-2/impact-252.png
-    # - assets/impact-2/impact-253.png
-    # - assets/impact-2/impact-254.png
-    # - assets/impact-2/impact-255.png
-    # - assets/impact-2/impact-256.png
-    # - assets/impact-2/impact-257.png
-    # - assets/impact-2/impact-258.png
-    # - assets/impact-2/impact-259.png
-    # - assets/impact-2/impact-260.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see

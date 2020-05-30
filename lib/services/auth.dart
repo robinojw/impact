@@ -21,24 +21,27 @@ class AuthService {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
+      var year = DateTime.now().year;
+      var month = DateTime.now().month;
+      var day = DateTime.now().day;
       List<Emission> emissions = [
         Emission(
-            time: DateTime.now(),
+            time: DateTime(year, month, day, 9, 0),
             emissionIcon: "directions_bike",
             emissionName: "E-Bike Journey",
-            emissionType: "7",
+            emissionType: "7 Miles",
             ghGas: 30),
         Emission(
-            time: DateTime.now(),
+            time: DateTime(year, month, day, 11, 0),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
-            emissionType: "5.6",
+            emissionType: "5.6 Miles",
             ghGas: 160),
         Emission(
-            time: DateTime.now(),
+            time: DateTime(year, month, day, 13, 0),
             emissionIcon: "train",
             emissionName: "Train Journey",
-            emissionType: "112",
+            emissionType: "112 Miles",
             ghGas: 643),
         Emission(
             time: DateTime.now(),
