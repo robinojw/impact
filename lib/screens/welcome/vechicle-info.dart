@@ -249,7 +249,7 @@ class _VehicleInfoState extends State<VehicleInfo> {
           onChanged: (val) =>
               setState(() => _currentEngineSize = double.parse(val)),
         ),
-        SizedBox(height: 10),
+        SizedBox(height: 20),
         Text('Vehicle Mpg', style: TextStyle(color: Colors.grey, fontSize: 12)),
         TextFormField(
           style: TextStyle(color: Colors.white),

@@ -27,6 +27,7 @@ class _InsightsState extends State<Insights> {
 
   var weight = 'grams';
   double difference = 0;
+  double emissions = 0;
 
   List<Emission> newList;
   List<List<Emission>> dayList;
@@ -46,6 +47,7 @@ class _InsightsState extends State<Insights> {
             dayList = calcDay(userData);
             Widget insightsChart =
                 InsightsChart.loadData(newList, dayList[0], dayList[1]);
+            totalEmissions = calcTotal(newList);
 
             return SingleChildScrollView(
               child: Container(
@@ -110,6 +112,7 @@ class _InsightsState extends State<Insights> {
         onValueChanged: (int newVal) {
           setState(() {
             currentTab = newVal;
+            totalEmissions = calcTotal(newList);
           });
         });
   }
@@ -119,17 +122,10 @@ class _InsightsState extends State<Insights> {
       averageEmissions = 20000;
     }
 
-    for (var item in newList) {
-      if (listIndex < newList.length) {
-        totalEmissions += item.ghGas;
-        listIndex++;
-      }
-    }
-
     double emissionNum = totalEmissions;
     double remaining = 0;
 
-    if (totalEmissions > 9999) {
+    if (totalEmissions >= 9999.0) {
       weight = 'Kilograms';
       emissionNum = totalEmissions / 1000;
       remaining = (averageEmissions / 1000) - totalEmissions;
@@ -224,7 +220,7 @@ class _InsightsState extends State<Insights> {
     double remaining = 0;
     double average = 0;
 
-    if (averageEmissions > 9999) {
+    if (averageEmissions > 9999.0) {
       weight = 'Kilograms';
       average = averageEmissions / 1000;
     }
@@ -391,9 +387,20 @@ class _InsightsState extends State<Insights> {
           if ((i.time != null) && (i.time.year == period.year)) timeList.add(i);
         }
       }
+
       return timeList;
     } else
       return dummy;
+  }
+
+  double calcTotal(List<Emission> newList) {
+    for (var item in newList) {
+      if (listIndex < newList.length) {
+        emissions += item.ghGas;
+        listIndex++;
+      }
+    }
+    return emissions;
   }
 
   List<Emission> addEnergy(UserData userData, List<Emission> list) {

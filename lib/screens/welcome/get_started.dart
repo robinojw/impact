@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:impact/screens/shared/routing_constants.dart';
+import 'package:impact/services/auth.dart';
 import 'package:impact/services/database.dart';
 
 class GetStarted extends StatelessWidget {

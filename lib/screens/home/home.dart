@@ -30,52 +30,58 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    return FutureBuilder<UserData>(
-        future: DatabaseService(uid: user.uid).getUserData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            DatabaseService(uid: user.uid).checkUserDocumentExists();
-            return Container(
-              decoration: backgroundGradient,
-              height: 800,
-              child: Scaffold(
-                backgroundColor: Colors.transparent,
-                body: SingleChildScrollView(
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        showWidget(),
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: FutureBuilder<UserData>(
+          future: DatabaseService(uid: user.uid).getUserData(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              DatabaseService(uid: user.uid).checkUserDocumentExists();
+              return Container(
+                decoration: backgroundGradient,
+                height: 800,
+                child: Scaffold(
+                  backgroundColor: Colors.transparent,
+                  body: SingleChildScrollView(
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          showWidget(),
+                        ]),
+                  ),
+                  bottomNavigationBar: CupertinoTabBar(
+                      currentIndex: _index,
+                      backgroundColor: Colors.transparent,
+                      onTap: (val) => setState(() {
+                            _index = val;
+                            requestLocationPermission(context);
+                          }),
+                      activeColor: Colors.white,
+                      items: [
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.group), title: Text('Group')),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.nature_people),
+                            title: Text('Improve')),
+                        BottomNavigationBarItem(
+                            icon: ImageIcon(
+                                AssetImage('assets/impact-white.png')),
+                            title: Text('Impact')),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.timeline),
+                            title: Text('Insights')),
+                        BottomNavigationBarItem(
+                            icon: Icon(Icons.person), title: Text('Profile')),
                       ]),
                 ),
-                bottomNavigationBar: CupertinoTabBar(
-                    currentIndex: _index,
-                    backgroundColor: Colors.transparent,
-                    onTap: (val) => setState(() {
-                          _index = val;
-                          requestLocationPermission(context);
-                        }),
-                    activeColor: Colors.white,
-                    items: [
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.group), title: Text('Group')),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.nature_people),
-                          title: Text('Improve')),
-                      BottomNavigationBarItem(
-                          icon:
-                              ImageIcon(AssetImage('assets/impact-white.png')),
-                          title: Text('Impact')),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.timeline), title: Text('Insights')),
-                      BottomNavigationBarItem(
-                          icon: Icon(Icons.person), title: Text('Profile')),
-                    ]),
-              ),
-            );
-          } else {
-            return Container(height: 0);
-          }
-        });
+              );
+            } else {
+              return Container(height: 0);
+            }
+          }),
+    );
   }
 
   Widget showWidget() {

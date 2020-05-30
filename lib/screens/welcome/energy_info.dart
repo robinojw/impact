@@ -196,11 +196,14 @@ class _EnergyInfoState extends State<EnergyInfo> {
                                               color: const Color(0XFF1451DB),
                                               textColor: Colors.white,
                                               onPressed: () async {
-                                                if ((_currentElectric == 0) ||
-                                                    (_currentHeating == 0) ||
-                                                    (_value = false)) {
-                                                  _currentElectric = 248.0;
-                                                  _currentHeating = 992.0;
+                                                if ((_value = false) ||
+                                                    (_currentElectric ==
+                                                        null)) {
+                                                  setState(() {
+                                                    _currentElectric = 248.0;
+                                                    _currentHeating = 992.0;
+                                                    print(_currentElectric);
+                                                  });
                                                 }
 
                                                 if (_formKey.currentState
@@ -289,7 +292,7 @@ class _EnergyInfoState extends State<EnergyInfo> {
           Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Monhly Heating Usage in KWh',
+                Text('Monthly Heating Usage in KWh',
                     style: TextStyle(color: Colors.grey, fontSize: 12)),
                 TextFormField(
                   style: TextStyle(color: Colors.white),

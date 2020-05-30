@@ -26,13 +26,43 @@ class AuthService {
       var day = DateTime.now().day;
       List<Emission> emissions = [
         Emission(
-            time: DateTime(year, month, day, 9, 0),
+            time: DateTime(year, month, day, 7, 0),
             emissionIcon: "directions_bike",
             emissionName: "E-Bike Journey",
             emissionType: "7 Miles",
             ghGas: 30),
         Emission(
+            time: DateTime(year, month, day, 7, 30),
+            emissionIcon: "local_cafe",
+            emissionName: "Coffee Cup",
+            emissionType: "Plastic and Paper",
+            ghGas: 30),
+        Emission(
+            time: DateTime(year, month, day, 8, 30),
+            emissionIcon: "local_cafe",
+            emissionName: "Coffee Cup",
+            emissionType: "Plastic and Paper",
+            ghGas: 30),
+        Emission(
+            time: DateTime(year, month, day, 9, 0),
+            emissionIcon: "directions_subway",
+            emissionName: "Underground Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 160),
+        Emission(
             time: DateTime(year, month, day, 11, 0),
+            emissionIcon: "directions_subway",
+            emissionName: "Underground Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 160),
+        Emission(
+            time: DateTime(year, month, day, 12, 0),
+            emissionIcon: "directions_bike",
+            emissionName: "E-Bike Journey",
+            emissionType: "7 Miles",
+            ghGas: 30),
+        Emission(
+            time: DateTime(year, month, day, 12, 30),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
             emissionType: "5.6 Miles",
@@ -41,14 +71,50 @@ class AuthService {
             time: DateTime(year, month, day, 13, 0),
             emissionIcon: "train",
             emissionName: "Train Journey",
-            emissionType: "112 Miles",
-            ghGas: 643),
+            emissionType: "5 Miles",
+            ghGas: 150),
         Emission(
             time: DateTime.now(),
             emissionIcon: "archive",
             emissionName: "Cardboard Box",
             emissionType: "Cardboard and Paper",
-            ghGas: 200)
+            ghGas: 60),
+        Emission(
+            time: DateTime(year, month, day - 2, 12, 0),
+            emissionIcon: "train",
+            emissionName: "Train Journey",
+            emissionType: "5 Miles",
+            ghGas: 150),
+        Emission(
+            time: DateTime(year, month, day - 2, 13, 0),
+            emissionIcon: "archive",
+            emissionName: "Cardboard Box",
+            emissionType: "Cardboard and Paper",
+            ghGas: 60),
+        Emission(
+            time: DateTime(year, month, day - 1, 9, 0),
+            emissionIcon: "directions_bike",
+            emissionName: "E-Bike Journey",
+            emissionType: "7 Miles",
+            ghGas: 30),
+        Emission(
+            time: DateTime(year, month, day - 2, 11, 0),
+            emissionIcon: "directions_subway",
+            emissionName: "Underground Journey",
+            emissionType: "5.6 Miles",
+            ghGas: 160),
+        Emission(
+            time: DateTime(year, month - 1, day, 13, 0),
+            emissionIcon: "train",
+            emissionName: "Train Journey",
+            emissionType: "5 Miles",
+            ghGas: 150),
+        Emission(
+            time: DateTime(year - 1, month, day, 13, 0),
+            emissionIcon: "archive",
+            emissionName: "Cardboard Box",
+            emissionType: "Cardboard and Paper",
+            ghGas: 60)
       ];
       await DatabaseService(uid: user.uid).updateUserData(
         '',
@@ -66,7 +132,7 @@ class AuthService {
         '',
       );
       await DatabaseService().updateItems(
-          'https://discerningcyclist.com/wp-content/uploads/2020/03/How-Does-LARQ-Work-1024x820.jpg',
+          'https://res.cloudinary.com/larq/image/upload/q_auto,f_auto/v1571138657/assets/spa/presentation/LARQ_Product-page_450x370_2x.jpg',
           'LARQ Smart Water Bottle',
           'The Larq water bottle is a state-of-the-art bottle capable of cleaning itself and purifying the water that\'s inside it. It utilizes environmentally-friendly UV-C technology to purify up to 99.9999% of bacteria and 99.99% of viruses when it\'s set to its highest mode',
           129,
@@ -78,15 +144,15 @@ class AuthService {
           250,
           600);
       await DatabaseService().updateItems(
-          'https://www.greenqueen.com.hk/wp-content/uploads/2019/08/Lush-Cork-Packaging.jpg',
+          'https://img.huffingtonpost.com/asset/5bd6fdd0210000de03c98d04.jpeg?ops=scalefit_720_noupscale',
           'Lush Shampoo Bar',
           'Mint and spearmint are well known for their antiseptic and analgesic properties, stimulating and soothing your scalp to promote healthy hair growth. Herbal thyme, sandalwood and tarragon are antimicrobial - helping to balance your scalp.',
           8,
           70);
       await DatabaseService().updateItems(
-          'https://cdn.blessthisstuff.com/imagens/stuff/sense-energy-monitor-2.jpg',
-          'Sense Smart Energy Meter',
-          'The Sense Home Energy Monitor tracks your home\'s energy use in real time to help you save, see what\'s happening in your home, and avoid disaster.',
+          'https://cdn.shopify.com/s/files/1/0071/9408/3394/products/nest-2-3_1024x1024@2x.jpg?v=1565072619',
+          'Nest Smart Thermostat E',
+          'The Nest Thermostat E is all set with a simple schedule to help you save from day one. It knows when everyone has left the house, then turns itself down so that you\'re not heating an empty home',
           200,
           6000);
       return _userFromFirebaseUser(user);

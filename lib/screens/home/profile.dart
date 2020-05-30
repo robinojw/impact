@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:impact/models/user.dart';
 import 'package:impact/screens/home/insights.dart';
 import 'package:impact/screens/shared/loading.dart';
+import 'package:impact/screens/shared/routing_constants.dart';
 import 'package:impact/services/auth.dart';
 import 'package:impact/services/database.dart';
 import 'package:provider/provider.dart';
@@ -59,8 +60,9 @@ class _ProfileState extends State<Profile> {
             icon: Icon(Icons.exit_to_app),
             iconSize: 24,
             color: Colors.white,
-            onPressed: () {
-              AuthService().signOut();
+            onPressed: () async {
+              await AuthService().signOut();
+              Navigator.pushNamed(context, start);
             })
       ]),
       new Container(
@@ -92,7 +94,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Icon(Icons.flash_on, color: Colors.white),
             SizedBox(height: 5),
-            Text((userData.electric).toString() + " Kwh",
+            Text((userData.electric.toInt()).toString() + " Kwh",
                 style: TextStyle(color: Colors.white, fontSize: 14))
           ],
         ),
@@ -100,7 +102,7 @@ class _ProfileState extends State<Profile> {
           children: <Widget>[
             Icon(Icons.whatshot, color: Colors.white),
             SizedBox(height: 5),
-            Text((userData.heating).toString() + " Kwh",
+            Text((userData.heating.toInt()).toString() + " Kwh",
                 style: TextStyle(color: Colors.white, fontSize: 14))
           ],
         ),

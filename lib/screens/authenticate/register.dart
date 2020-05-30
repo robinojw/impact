@@ -97,6 +97,8 @@ class _RegisterState extends State<Register> {
                                       await _auth.registerWithEmailAndPassword(
                                           email, password);
 
+                                  Navigator.pushNamed(context, personal);
+
                                   if (result == null) {
                                     setState(() {
                                       loading = false;
