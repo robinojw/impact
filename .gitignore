@@ -39,7 +39,7 @@ lib/generated_plugin_registrant.dart
 google-services.json
 GoogleService-Info.plist
 distance_matrix.dart
-group.dart
+lib/screens/home/group.dart
 AndroidManifest.xml
 AppDelegate.swift
 AppDelegate.swift
