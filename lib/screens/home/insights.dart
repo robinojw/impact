@@ -25,6 +25,9 @@ class _InsightsState extends State<Insights> {
   double containerHeight = 0;
   int listIndex = 0;
 
+  var weight = 'grams';
+  double difference = 0;
+
   List<Emission> newList;
   List<List<Emission>> dayList;
   List<Emission> emissionList;
@@ -43,12 +46,6 @@ class _InsightsState extends State<Insights> {
             dayList = calcDay(userData);
             Widget insightsChart =
                 InsightsChart.loadData(newList, dayList[0], dayList[1]);
-            for (var item in newList) {
-              if (listIndex < newList.length) {
-                totalEmissions += item.ghGas;
-                listIndex++;
-              }
-            }
 
             return SingleChildScrollView(
               child: Container(
@@ -119,9 +116,26 @@ class _InsightsState extends State<Insights> {
 
   Widget leftCard(UserData userData) {
     if (averageEmissions == 0) {
-      averageEmissions = 8000;
+      averageEmissions = 20000;
     }
-    var remaining = averageEmissions - totalEmissions;
+
+    for (var item in newList) {
+      if (listIndex < newList.length) {
+        totalEmissions += item.ghGas;
+        listIndex++;
+      }
+    }
+
+    double emissionNum = totalEmissions;
+    double remaining = 0;
+
+    if (totalEmissions > 9999) {
+      weight = 'Kilograms';
+      emissionNum = totalEmissions / 1000;
+      remaining = (averageEmissions / 1000) - totalEmissions;
+    } else {
+      var remaining = averageEmissions - totalEmissions;
+    }
 
     return Container(
         decoration: BoxDecoration(
@@ -149,7 +163,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text((totalEmissions.toInt()).toString(),
+                    child: Text(emissionNum.toStringAsFixed(1),
                         style: TextStyle(
                             height: 1.1,
                             color: Colors.white,
@@ -158,7 +172,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(right: 50),
-                    child: Text("grams",
+                    child: Text(weight,
                         textAlign: TextAlign.right,
                         style: TextStyle(
                             height: 0.8,
@@ -205,16 +219,26 @@ class _InsightsState extends State<Insights> {
   Widget rightCard(userData) {
     Color color = Color(0xFFBCC158);
     String prefix = '-';
-    double difference;
+
+    double emissionNum = totalEmissions;
+    double remaining = 0;
+    double average = 0;
+
+    if (averageEmissions > 9999) {
+      weight = 'Kilograms';
+      average = averageEmissions / 1000;
+    }
 
     if (totalEmissions > averageEmissions) {
       color = Color(0xFFDB4545);
       prefix = "+";
-      difference = totalEmissions - averageEmissions;
+      difference = ((totalEmissions - averageEmissions) / 1000);
+      if (difference > 9999) difference = difference / 1000;
     } else {
       color = Color(0xFFBCC158);
       prefix = '-';
       difference = averageEmissions - totalEmissions;
+      if (difference > 9999) difference = difference / 1000;
     }
 
     return Container(
@@ -242,7 +266,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text((averageEmissions.toInt()).toString(),
+                    child: Text(average.toStringAsFixed(1),
                         style: TextStyle(
                             height: 1.1,
                             color: Colors.white,
@@ -251,7 +275,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(right: 50),
-                    child: Text("grams",
+                    child: Text(weight,
                         style: TextStyle(
                             height: 0.8,
                             fontSize: 12,
@@ -262,7 +286,7 @@ class _InsightsState extends State<Insights> {
           SizedBox(height: 20),
           Align(
             alignment: Alignment.centerRight,
-            child: Text(prefix + (difference.toInt()).toString(),
+            child: Text(prefix + (difference.toStringAsFixed(1)),
                 style: TextStyle(color: color, fontSize: 26)),
           )
         ]));
@@ -319,6 +343,121 @@ class _InsightsState extends State<Insights> {
                 style: TextStyle(color: const Color(0xFFDB4545))),
           ),
         ));
+  }
+
+  List<Emission> currentPeriod(int tab, List<Emission> emissions) {
+    DateTime period = DateTime.now();
+    List<Emission> timeList = new List<Emission>();
+    List<Emission> dummy = new List<Emission>();
+
+    if (emissions != null) {
+      if (tab == 0) {
+        for (var i in emissions) {
+          if ((i.time != null) &&
+              (i.time.day == period.day) &&
+              (i.time.month == period.month) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 1) {
+        int weekNumber(DateTime date) {
+          int dayOfYear = int.parse(DateFormat("D").format(date));
+          return ((dayOfYear - date.weekday + 10) / 7).floor();
+        }
+
+        for (var i in emissions) {
+          var eWeek = weekNumber(i.time);
+          var thisWeek = weekNumber(period);
+          if ((i.time != null) &&
+              (eWeek == thisWeek) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 2) {
+        for (var i in emissions) {
+          if ((i.time != null) &&
+              (i.time.month == period.month) &&
+              (i.time.year == period.year)) {
+            timeList.add(i);
+          }
+        }
+      }
+      if (tab == 3) {
+        for (var i in emissions) {
+          if ((i.time != null) && (i.time.year == period.year)) timeList.add(i);
+        }
+      }
+      return timeList;
+    } else
+      return dummy;
+  }
+
+  List<Emission> addEnergy(UserData userData, List<Emission> list) {
+    list.add(
+      Emission(
+          time: DateTime.now(),
+          emissionIcon: 'flash_on',
+          emissionName: 'Electricity',
+          emissionType:
+              ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
+          ghGas: (userData.electric * 300) ~/ 31),
+    );
+
+    list.add(Emission(
+        time: DateTime.now(),
+        emissionIcon: 'whatshot',
+        emissionName: 'Gas',
+        emissionType:
+            ((userData.heating / 31).roundToDouble()).toString() + " KWh",
+        ghGas: (userData.heating * 203) ~/ 31));
+
+    return list;
+  }
+
+  List<List<Emission>> calcDay(UserData userData) {
+    List<Emission> electric = new List<Emission>();
+    List<Emission> energy = new List<Emission>();
+
+    for (int i = 0; i < 24; i++) {
+      var year = DateTime.now().year;
+      var month = DateTime.now().month;
+      var day = DateTime.now().day;
+
+      var hour = new DateTime(year, month, day, i, 0);
+
+      electric.add(
+        Emission(
+            time: hour,
+            emissionIcon: 'flash_on',
+            emissionName: 'Electricity',
+            emissionType:
+                (((userData.electric / 31) / 24).roundToDouble()).toString() +
+                    ' KWh',
+            ghGas: (((userData.electric * 300) ~/ 31) ~/ 24)),
+      );
+
+      energy.add(Emission(
+          time: hour,
+          emissionIcon: 'whatshot',
+          emissionName: 'Gas',
+          emissionType:
+              (((userData.heating / 31) / 24).roundToDouble()).toString() +
+                  " KWh",
+          ghGas: (((userData.heating * 203) ~/ 31) ~/ 24)));
+    }
+
+    for (var i in electric) {
+      if (i.time.isAfter(DateTime.now())) energy.remove(i);
+    }
+    for (var i in energy) {
+      if (i.time.isAfter(DateTime.now())) electric.remove(i);
+    }
+
+    return [electric, energy];
   }
 
   Icon getIcon(String icon) {
@@ -463,113 +602,5 @@ class _InsightsState extends State<Insights> {
           size: 29,
         );
     }
-  }
-
-  List<Emission> currentPeriod(int tab, List<Emission> emissions) {
-    DateTime period = DateTime.now();
-    List<Emission> timeList = new List<Emission>();
-    List<Emission> dummy = new List<Emission>();
-
-    if (emissions != null) {
-      if (tab == 0) {
-        for (var i in emissions) {
-          if ((i.time != null) &&
-              (i.time.day == period.day) &&
-              (i.time.month == period.month) &&
-              (i.time.year == period.year)) {
-            timeList.add(i);
-          }
-        }
-      }
-      if (tab == 1) {
-        int weekNumber(DateTime date) {
-          int dayOfYear = int.parse(DateFormat("D").format(date));
-          return ((dayOfYear - date.weekday + 10) / 7).floor();
-        }
-
-        for (var i in emissions) {
-          var eWeek = weekNumber(i.time);
-          var thisWeek = weekNumber(period);
-          if ((i.time != null) &&
-              (eWeek == thisWeek) &&
-              (i.time.year == period.year)) {
-            timeList.add(i);
-          }
-        }
-      }
-      if (tab == 2) {
-        for (var i in emissions) {
-          if ((i.time != null) &&
-              (i.time.month == period.month) &&
-              (i.time.year == period.year)) {
-            timeList.add(i);
-          }
-        }
-      }
-      if (tab == 3) {
-        for (var i in emissions) {
-          if ((i.time != null) && (i.time.year == period.year)) timeList.add(i);
-        }
-      }
-      return timeList;
-    } else
-      return dummy;
-  }
-
-  List<Emission> addEnergy(UserData userData, List<Emission> list) {
-    list.add(
-      Emission(
-          time: DateTime.now(),
-          emissionIcon: 'flash_on',
-          emissionName: 'Electricity',
-          emissionType:
-              ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
-          ghGas: (userData.electric * 300) ~/ 31),
-    );
-
-    list.add(Emission(
-        time: DateTime.now(),
-        emissionIcon: 'whatshot',
-        emissionName: 'Gas',
-        emissionType:
-            ((userData.heating / 31).roundToDouble()).toString() + " KWh",
-        ghGas: (userData.heating * 203) ~/ 31));
-
-    return list;
-  }
-
-  List<List<Emission>> calcDay(UserData userData) {
-    List<Emission> electric = new List<Emission>();
-    List<Emission> energy = new List<Emission>();
-
-    for (int i = 0; i < 25; i++) {
-      var year = DateTime.now().year;
-      var month = DateTime.now().month;
-      var day = DateTime.now().day;
-
-      var hour = new DateTime(year, month, day, i, 0);
-
-      electric.add(
-        Emission(
-            time: hour,
-            emissionIcon: 'flash_on',
-            emissionName: 'Electricity',
-            emissionType:
-                (((userData.electric / 31) / 24).roundToDouble()).toString() +
-                    ' KWh',
-            ghGas: (((userData.electric * 300) ~/ 31) ~/ 24)),
-      );
-
-      energy.add(Emission(
-          time: hour,
-          emissionIcon: 'whatshot',
-          emissionName: 'Gas',
-          emissionType:
-              (((userData.heating / 31) / 24).roundToDouble()).toString() +
-                  " KWh",
-          ghGas: (((userData.heating * 203) ~/ 31) ~/ 24)));
-    }
-
-    return [electric, energy];
   }
 }

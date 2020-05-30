@@ -6,6 +6,7 @@ import 'package:impact/models/user.dart';
 import 'package:impact/screens/home/add_emission.dart';
 import 'package:impact/screens/home/charts/day_chart.dart';
 import 'package:impact/screens/home/charts/insights_chart.dart';
+import 'package:impact/screens/home/insights.dart';
 import 'package:impact/screens/shared/loading.dart';
 import 'package:impact/services/auth.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
@@ -26,6 +27,7 @@ class _ImpactState extends State<Impact> {
   int listIndex = 0;
   int totalEmissions = 0;
   List<Emission> newList;
+  List<List<Emission>> dayList;
   List<Emission> empty = List<Emission>();
 
   @override
@@ -60,8 +62,9 @@ class _ImpactState extends State<Impact> {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
             newList = currentPeriod(userData.emissions);
-            calcDay(newList, userData);
-            // Widget chart = InsightsChart.loadData(newList, empty);
+            dayList = calcDay(userData);
+            Widget chart =
+                InsightsChart.loadData(newList, dayList[0], dayList[1]);
             return Container(
               height: MediaQuery.of(context).size.height - 84,
               child: Stack(children: <Widget>[
@@ -107,9 +110,9 @@ class _ImpactState extends State<Impact> {
                           children: <Widget>[
                             total(newList),
                             // SizedBox(height: 20),
-                            // Align(
-                            //     alignment: Alignment.bottomCenter,
-                            //     child: SizedBox(height: 200, child: chart)),
+                            Align(
+                                alignment: Alignment.bottomCenter,
+                                child: SizedBox(height: 200, child: chart)),
                           ],
                         )),
                   ],
@@ -177,25 +180,29 @@ class _ImpactState extends State<Impact> {
     }
   }
 
-  List<Emission> calcDay(newList, UserData userData) {
-    for (int i = 0; i < 25; i++) {
+  List<List<Emission>> calcDay(UserData userData) {
+    List<Emission> electric = new List<Emission>();
+    List<Emission> energy = new List<Emission>();
+
+    for (int i = 0; i < 24; i++) {
       var year = DateTime.now().year;
       var month = DateTime.now().month;
       var day = DateTime.now().day;
 
       var hour = new DateTime(year, month, day, i, 0);
-      // print(hour);
-      newList.add(
+
+      electric.add(
         Emission(
             time: hour,
             emissionIcon: 'flash_on',
             emissionName: 'Electricity',
             emissionType:
-                ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
+                (((userData.electric / 31) / 24).roundToDouble()).toString() +
+                    ' KWh',
             ghGas: (((userData.electric * 300) ~/ 31) ~/ 24)),
       );
 
-      newList.add(Emission(
+      energy.add(Emission(
           time: hour,
           emissionIcon: 'whatshot',
           emissionName: 'Gas',
@@ -205,6 +212,13 @@ class _ImpactState extends State<Impact> {
           ghGas: (((userData.heating * 203) ~/ 31) ~/ 24)));
     }
 
-    return newList;
+    for (var i in electric) {
+      if (i.time.isAfter(DateTime.now())) energy.remove(i);
+    }
+    for (var i in energy) {
+      if (i.time.isAfter(DateTime.now())) electric.remove(i);
+    }
+
+    return [electric, energy];
   }
 }
