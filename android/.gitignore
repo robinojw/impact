@@ -8,3 +8,5 @@ google-services.json
 GeneratedPluginRegistrant.java
 /src/AndroidManifest.xml
 AndroidManifest.xml
+group.dart
+lib/screens/home/group.dart
