@@ -26,8 +26,13 @@ class _InsightsState extends State<Insights> {
   int listIndex = 0;
 
   var weight = 'grams';
+  var weightRight = 'grams';
   double difference = 0;
   double emissions = 0;
+  bool changed = false;
+  int index = 0;
+
+  var txt = TextEditingController();
 
   List<Emission> newList;
   List<List<Emission>> dayList;
@@ -41,13 +46,15 @@ class _InsightsState extends State<Insights> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
-            emissionList = userData.emissions;
-            emissionList = addEnergy(userData, emissionList);
+            //List for text displays
+            emissionList = currentPeriod(currentTab, userData.emissions);
+            emissionList = addEnergy(userData, emissionList, currentTab);
+            totalEmissions = calcTotal(emissionList);
+            //Lists for graph
             newList = currentPeriod(currentTab, userData.emissions);
             dayList = calcDay(userData);
             Widget insightsChart =
                 InsightsChart.loadData(newList, dayList[0], dayList[1]);
-            totalEmissions = calcTotal(newList);
 
             return SingleChildScrollView(
               child: Container(
@@ -61,9 +68,9 @@ class _InsightsState extends State<Insights> {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        leftCard(userData),
+                        leftCard(userData, emissionList),
                         SizedBox(width: 5),
-                        rightCard(userData),
+                        rightCard(userData, emissionList),
                       ]),
                   SizedBox(height: 20),
                   Align(
@@ -112,27 +119,24 @@ class _InsightsState extends State<Insights> {
         onValueChanged: (int newVal) {
           setState(() {
             currentTab = newVal;
-            totalEmissions = calcTotal(newList);
           });
         });
   }
 
-  Widget leftCard(UserData userData) {
+  Widget leftCard(UserData userData, List<Emission> list) {
     if (averageEmissions == 0) {
       averageEmissions = 20000;
     }
 
     double emissionNum = totalEmissions;
     double remaining = 0;
-
     if (totalEmissions >= 9999.0) {
       weight = 'Kilograms';
-      emissionNum = totalEmissions / 1000;
+      totalEmissions = totalEmissions / 1000;
       remaining = (averageEmissions / 1000) - totalEmissions;
     } else {
-      var remaining = averageEmissions - totalEmissions;
+      weight = 'grams';
     }
-
     return Container(
         decoration: BoxDecoration(
             color: const Color(0xD9252740),
@@ -159,7 +163,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(emissionNum.toStringAsFixed(1),
+                    child: Text(totalEmissions.toStringAsFixed(1),
                         style: TextStyle(
                             height: 1.1,
                             color: Colors.white,
@@ -212,17 +216,18 @@ class _InsightsState extends State<Insights> {
         ]));
   }
 
-  Widget rightCard(userData) {
+  Widget rightCard(userData, List<Emission> list) {
     Color color = Color(0xFFBCC158);
     String prefix = '-';
-
     double emissionNum = totalEmissions;
     double remaining = 0;
     double average = 0;
 
     if (averageEmissions > 9999.0) {
-      weight = 'Kilograms';
+      weightRight = 'Kilograms';
       average = averageEmissions / 1000;
+    } else {
+      weightRight = 'grams';
     }
 
     if (totalEmissions > averageEmissions) {
@@ -271,7 +276,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(right: 50),
-                    child: Text(weight,
+                    child: Text(weightRight,
                         style: TextStyle(
                             height: 0.8,
                             fontSize: 12,
@@ -403,24 +408,48 @@ class _InsightsState extends State<Insights> {
     return emissions;
   }
 
-  List<Emission> addEnergy(UserData userData, List<Emission> list) {
+  List<Emission> addEnergy(UserData userData, List<Emission> list, currentTab) {
+    int factor = 0;
+
+    switch (currentTab) {
+      case 0:
+        factor = 1;
+        break;
+      case 1:
+        factor = 7;
+        break;
+      case 2:
+        factor = 31;
+        break;
+      case 3:
+        factor = 365;
+        break;
+        break;
+      default:
+        factor = 0;
+    }
+
     list.add(
       Emission(
           time: DateTime.now(),
           emissionIcon: 'flash_on',
           emissionName: 'Electricity',
           emissionType:
-              ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
-          ghGas: (userData.electric * 300) ~/ 31),
+              (((userData.electric / 31) * factor).roundToDouble()).toString() +
+                  ' KWh',
+          ghGas: ((userData.electric * 300) ~/ 31) * factor),
     );
 
-    list.add(Emission(
-        time: DateTime.now(),
-        emissionIcon: 'whatshot',
-        emissionName: 'Gas',
-        emissionType:
-            ((userData.heating / 31).roundToDouble()).toString() + " KWh",
-        ghGas: (userData.heating * 203) ~/ 31));
+    list.add(
+      Emission(
+          time: DateTime.now(),
+          emissionIcon: 'whatshot',
+          emissionName: 'Gas',
+          emissionType:
+              (((userData.heating / 31) * factor).roundToDouble()).toString() +
+                  " KWh",
+          ghGas: ((userData.heating * 203) ~/ 31) * factor),
+    );
 
     return list;
   }

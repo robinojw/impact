@@ -58,7 +58,7 @@ class InsightsChart extends StatelessWidget {
         patternColorFn: (_, __) => charts.MaterialPalette.white,
         domainFn: (Emission emission, _) => emission.time,
         measureFn: (Emission emission, _) => emission.ghGas,
-        data: energy,
+        data: electric,
       ),
       new charts.Series<Emission, DateTime>(
         id: 'Emission',

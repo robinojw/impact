@@ -24,73 +24,62 @@ class AuthService {
       var year = DateTime.now().year;
       var month = DateTime.now().month;
       var day = DateTime.now().day;
+      var hour = DateTime.now().hour;
       List<Emission> emissions = [
         Emission(
-            time: DateTime(year, month, day, 7, 0),
+            time: DateTime(year, month, day, hour - 6, 0),
             emissionIcon: "directions_bike",
             emissionName: "E-Bike Journey",
             emissionType: "7 Miles",
             ghGas: 30),
         Emission(
-            time: DateTime(year, month, day, 7, 30),
+            time: DateTime(year, month, day, hour - 7, 30),
             emissionIcon: "local_cafe",
             emissionName: "Coffee Cup",
             emissionType: "Plastic and Paper",
             ghGas: 30),
         Emission(
-            time: DateTime(year, month, day, 8, 30),
+            time: DateTime(year, month, day, hour - 7, 30),
             emissionIcon: "local_cafe",
             emissionName: "Coffee Cup",
             emissionType: "Plastic and Paper",
             ghGas: 30),
         Emission(
-            time: DateTime(year, month, day, 9, 0),
+            time: DateTime(year, month, day, hour - 6, 0),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
             emissionType: "5.6 Miles",
             ghGas: 160),
         Emission(
-            time: DateTime(year, month, day, 11, 0),
+            time: DateTime(year, month, day, hour - 5, 0),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
             emissionType: "5.6 Miles",
             ghGas: 160),
         Emission(
-            time: DateTime(year, month, day, 12, 0),
+            time: DateTime(year, month, day, hour - 4, 0),
             emissionIcon: "directions_bike",
             emissionName: "E-Bike Journey",
             emissionType: "7 Miles",
             ghGas: 30),
         Emission(
-            time: DateTime(year, month, day, 12, 30),
+            time: DateTime(year, month, day, hour - 3, 30),
             emissionIcon: "directions_subway",
             emissionName: "Underground Journey",
             emissionType: "5.6 Miles",
             ghGas: 160),
         Emission(
-            time: DateTime(year, month, day, 13, 0),
+            time: DateTime(year, month, day, hour - 2, 0),
             emissionIcon: "train",
             emissionName: "Train Journey",
             emissionType: "5 Miles",
             ghGas: 150),
-        Emission(
+            Emission(
             time: DateTime.now(),
-            emissionIcon: "archive",
-            emissionName: "Cardboard Box",
-            emissionType: "Cardboard and Paper",
-            ghGas: 60),
-        Emission(
-            time: DateTime(year, month, day - 2, 12, 0),
             emissionIcon: "train",
             emissionName: "Train Journey",
             emissionType: "5 Miles",
             ghGas: 150),
-        Emission(
-            time: DateTime(year, month, day - 2, 13, 0),
-            emissionIcon: "archive",
-            emissionName: "Cardboard Box",
-            emissionType: "Cardboard and Paper",
-            ghGas: 60),
         Emission(
             time: DateTime(year, month, day - 1, 9, 0),
             emissionIcon: "directions_bike",
@@ -104,17 +93,23 @@ class AuthService {
             emissionType: "5.6 Miles",
             ghGas: 160),
         Emission(
-            time: DateTime(year, month - 1, day, 13, 0),
+            time: DateTime(year, month, day - 2, 12, 0),
             emissionIcon: "train",
             emissionName: "Train Journey",
             emissionType: "5 Miles",
             ghGas: 150),
         Emission(
-            time: DateTime(year - 1, month, day, 13, 0),
+            time: DateTime(year, month, day - 2, 13, 0),
             emissionIcon: "archive",
             emissionName: "Cardboard Box",
             emissionType: "Cardboard and Paper",
-            ghGas: 60)
+            ghGas: 60),
+        Emission(
+            time: DateTime(year, month - 1, day, 13, 0),
+            emissionIcon: "train",
+            emissionName: "Train Journey",
+            emissionType: "5 Miles",
+            ghGas: 150),
       ];
       await DatabaseService(uid: user.uid).updateUserData(
         '',

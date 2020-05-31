@@ -25,10 +25,13 @@ class _ImpactState extends State<Impact> {
 
   bool show = false;
   int listIndex = 0;
-  int totalEmissions = 0;
+  double totalEmissions = 0;
   List<Emission> newList;
   List<List<Emission>> dayList;
   List<Emission> empty = List<Emission>();
+  List<Emission> displayList = List<Emission>();
+  int index = 0;
+  double emissions = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +64,12 @@ class _ImpactState extends State<Impact> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             UserData userData = snapshot.data;
+            //Lists for text display
+            displayList = currentPeriod(userData.emissions);
+            displayList = addEnergy(userData, displayList);
+            totalEmissions = calcTotal(displayList);
+
+            //Lists for Graph
             newList = currentPeriod(userData.emissions);
             dayList = calcDay(userData);
             Widget chart =
@@ -103,16 +112,17 @@ class _ImpactState extends State<Impact> {
                             ])),
                     Container(height: 335, width: 400, child: animation()),
                     Padding(
-                        padding: EdgeInsets.only(left: 10, right: 10),
+                        padding:
+                            EdgeInsets.only(left: 10, right: 10, bottom: 0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            total(newList),
+                            total(displayList),
                             // SizedBox(height: 20),
                             Align(
                                 alignment: Alignment.bottomCenter,
-                                child: SizedBox(height: 200, child: chart)),
+                                child: SizedBox(height: 220, child: chart)),
                           ],
                         )),
                   ],
@@ -125,21 +135,24 @@ class _ImpactState extends State<Impact> {
         });
   }
 
+  double calcTotal(List<Emission> newList) {
+    for (var item in newList) {
+      if (listIndex < newList.length) {
+        emissions += item.ghGas.toDouble();
+        listIndex++;
+      }
+    }
+    return emissions;
+  }
+
   Widget animation() {
     return Image.asset('assets/impact.gif',
         alignment: Alignment.center, fit: BoxFit.fitHeight);
   }
 
   Widget total(List<Emission> emissions) {
-    for (var item in emissions) {
-      if (listIndex < emissions.length) {
-        totalEmissions += item.ghGas;
-        listIndex++;
-      }
-    }
-
     return Container(
-        height: 90,
+        height: 77,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -147,7 +160,7 @@ class _ImpactState extends State<Impact> {
                 style:
                     TextStyle(fontSize: 12, color: Colors.white, height: 0.9)),
             SizedBox(height: 3),
-            Text(totalEmissions.toString(),
+            Text(totalEmissions.toStringAsFixed(0),
                 style: TextStyle(
                     fontSize: 60,
                     color: Colors.white,
@@ -220,5 +233,30 @@ class _ImpactState extends State<Impact> {
     }
 
     return [electric, energy];
+  }
+
+  List<Emission> addEnergy(UserData userData, List<Emission> list) {
+    if (index != 1) {
+      list.add(
+        Emission(
+            time: DateTime.now(),
+            emissionIcon: 'flash_on',
+            emissionName: 'Electricity',
+            emissionType:
+                ((userData.electric / 31).roundToDouble()).toString() + ' KWh',
+            ghGas: (userData.electric * 300) ~/ 31),
+      );
+
+      list.add(Emission(
+          time: DateTime.now(),
+          emissionIcon: 'whatshot',
+          emissionName: 'Gas',
+          emissionType:
+              ((userData.heating / 31).roundToDouble()).toString() + " KWh",
+          ghGas: (userData.heating * 203) ~/ 31));
+      index++;
+    }
+
+    return list;
   }
 }
