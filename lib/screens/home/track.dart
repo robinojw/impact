@@ -120,6 +120,9 @@ class _TrackState extends State<Track> {
                           child: Text('End Trip',
                               style: TextStyle(color: Colors.red)))),
                   onPressed: () {
+                    setState(() {
+                      recording = false;
+                    });
                     submitTrip();
                   },
                 ),
