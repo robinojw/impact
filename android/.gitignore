@@ -7,5 +7,5 @@ gradle-wrapper.jar
 google-services.json
 GeneratedPluginRegistrant.java
 /src/AndroidManifest.xml
-group.dart
-lib/screens/home/group.dart
+track.dart
+lib/screens/home/track.dart

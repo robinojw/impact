@@ -39,6 +39,7 @@ lib/generated_plugin_registrant.dart
 ios/Runner/AppDelegate.swift
 *lib/screens/home/track.dart
 
+
 track.dart
 AppDelegate.swift
 google-services.json
@@ -48,4 +49,4 @@ lib/screens/home/track.dart
 AndroidManifest.xml
 ios/Runnner/AppDelegate.swift
 appdelegate.swift
-home/track.dart
+lib/screens/home/track.dart
