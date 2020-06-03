@@ -36,7 +36,7 @@ class _InsightsState extends State<Insights> {
 
   List<Emission> newList;
   List<List<Emission>> dayList;
-  List<Emission> emissionList;
+  List<Emission> emissionList = new List<Emission>();
 
   @override
   Widget build(BuildContext context) {
@@ -130,6 +130,7 @@ class _InsightsState extends State<Insights> {
 
     double emissionNum = 0;
     double remaining = 0;
+    String printEmission;
 
     for (var i in list) {
       emissionNum += i.ghGas;
@@ -139,8 +140,11 @@ class _InsightsState extends State<Insights> {
       weight = 'Kilograms';
       emissionNum = emissionNum / 1000;
       remaining = (averageEmissions / 1000) - emissionNum;
+      printEmission = emissionNum.toStringAsFixed(1);
     } else {
       weight = 'grams';
+      remaining = averageEmissions - emissionNum;
+      printEmission = emissionNum.toStringAsFixed(0);
     }
     return Container(
         decoration: BoxDecoration(
@@ -168,7 +172,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(emissionNum.toStringAsFixed(1),
+                    child: Text(printEmission,
                         style: TextStyle(
                             height: 1.1,
                             color: Colors.white,
@@ -224,27 +228,63 @@ class _InsightsState extends State<Insights> {
   Widget rightCard(userData, List<Emission> list) {
     Color color = Color(0xFFBCC158);
     String prefix = '-';
-    double emissionNum = totalEmissions;
+    double emissionNum = 0;
     double remaining = 0;
     double average = 0;
+    String period;
 
-    if (averageEmissions > 9999.0) {
-      weightRight = 'Kilograms';
-      average = averageEmissions / 1000;
-    } else {
-      weightRight = 'grams';
+    for (var i in list) {
+      emissionNum += i.ghGas;
     }
 
-    if (totalEmissions > averageEmissions) {
+    switch (currentTab) {
+      case 0:
+        period = "Daily";
+        average += averageEmissions * 1;
+        break;
+      case 1:
+        period = "Weekly";
+        average += averageEmissions * 7;
+        break;
+      case 2:
+        period = "Monthly";
+        average += averageEmissions * 31;
+        break;
+      case 3:
+        period = "Yearly";
+        average += averageEmissions * 365;
+        break;
+        break;
+      default:
+        period = "Daily";
+        average += average * 1;
+    }
+    if (emissionNum > average) {
       color = Color(0xFFDB4545);
       prefix = "+";
-      difference = ((totalEmissions - averageEmissions) / 1000);
-      if (difference > 9999) difference = difference / 1000;
+      if (average > emissionNum) {
+        difference = average - emissionNum.toInt();
+      } else {
+        difference = emissionNum - average.toInt();
+      }
+      if (emissionNum > 9999) difference = difference / 1000;
     } else {
       color = Color(0xFFBCC158);
-      prefix = '-';
-      difference = averageEmissions - totalEmissions;
-      if (difference > 9999) difference = difference / 1000;
+      prefix = '';
+      if (average > emissionNum) {
+        difference = average.toInt() - emissionNum;
+      } else {
+        difference = emissionNum - average.toInt();
+      }
+      if (average > 9999) difference = difference / 1000;
+    }
+
+    if (average > 9999.0) {
+      weightRight = 'Kilograms';
+      average = average / 1000;
+      emissionNum = emissionNum / 1000;
+    } else {
+      weightRight = 'grams';
     }
 
     return Container(
@@ -263,7 +303,7 @@ class _InsightsState extends State<Insights> {
                 children: <Widget>[
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text("Daily average",
+                    child: Text(period + " average",
                         textAlign: TextAlign.left,
                         style: TextStyle(
                             height: 1,
@@ -448,7 +488,8 @@ class _InsightsState extends State<Insights> {
         factor = 0;
     }
 
-    list.add(
+    list.insert(
+      0,
       Emission(
           time: DateTime.now(),
           emissionIcon: 'flash_on',
@@ -459,7 +500,8 @@ class _InsightsState extends State<Insights> {
           ghGas: ((userData.electric * 300) ~/ 31) * factor),
     );
 
-    list.add(
+    list.insert(
+      0,
       Emission(
           time: DateTime.now(),
           emissionIcon: 'whatshot',
