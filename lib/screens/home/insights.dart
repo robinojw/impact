@@ -128,12 +128,17 @@ class _InsightsState extends State<Insights> {
       averageEmissions = 20000;
     }
 
-    double emissionNum = totalEmissions;
+    double emissionNum = 0;
     double remaining = 0;
-    if (totalEmissions >= 9999.0) {
+
+    for (var i in list) {
+      emissionNum += i.ghGas;
+    }
+
+    if (emissionNum >= 9999.0) {
       weight = 'Kilograms';
-      totalEmissions = totalEmissions / 1000;
-      remaining = (averageEmissions / 1000) - totalEmissions;
+      emissionNum = emissionNum / 1000;
+      remaining = (averageEmissions / 1000) - emissionNum;
     } else {
       weight = 'grams';
     }
@@ -163,7 +168,7 @@ class _InsightsState extends State<Insights> {
                   ),
                   Align(
                     alignment: Alignment.centerLeft,
-                    child: Text(totalEmissions.toStringAsFixed(1),
+                    child: Text(emissionNum.toStringAsFixed(1),
                         style: TextStyle(
                             height: 1.1,
                             color: Colors.white,
@@ -325,25 +330,39 @@ class _InsightsState extends State<Insights> {
   //------Card Tile---------
   Widget cardTile(Emission emission, int length) {
     Icon _emissionIcon;
+    double weight = 0;
+    String unit = 'g';
 
-    _emissionIcon = getIcon(emission.emissionIcon);
+    if (emission.emissionName != null) {
+      _emissionIcon = getIcon(emission.emissionIcon);
 
-    return Padding(
-        padding: const EdgeInsets.only(top: 0, bottom: 0),
-        child: Card(
-          margin: EdgeInsets.only(top: 1.5, left: 0, right: 0, bottom: 1.5),
-          color: const Color(0xD9252740),
-          child: ListTile(
-            dense: true,
-            leading: _emissionIcon,
-            title: Text(emission.emissionName,
-                style: TextStyle(color: Colors.grey)),
-            subtitle: Text(emission.emissionType,
-                style: TextStyle(color: Colors.white)),
-            trailing: Text(emission.ghGas.toString() + "g",
-                style: TextStyle(color: const Color(0xFFDB4545))),
-          ),
-        ));
+      if (emission.ghGas > 1000) {
+        unit = 'KG';
+        weight = emission.ghGas / 1000;
+      } else {
+        weight += emission.ghGas.toDouble();
+        unit = 'g';
+      }
+
+      return Padding(
+          padding: const EdgeInsets.only(top: 0, bottom: 0),
+          child: Card(
+            margin: EdgeInsets.only(top: 1.5, left: 0, right: 0, bottom: 1.5),
+            color: const Color(0xD9252740),
+            child: ListTile(
+              dense: true,
+              leading: _emissionIcon,
+              title: Text(emission.emissionName,
+                  style: TextStyle(color: Colors.grey)),
+              subtitle: Text(emission.emissionType,
+                  style: TextStyle(color: Colors.white)),
+              trailing: Text(weight.toStringAsFixed(1) + unit,
+                  style: TextStyle(color: const Color(0xFFDB4545))),
+            ),
+          ));
+    } else {
+      return Container(height: 0);
+    }
   }
 
   List<Emission> currentPeriod(int tab, List<Emission> emissions) {

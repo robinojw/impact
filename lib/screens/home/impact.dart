@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:impact/models/user.dart';
 import 'package:impact/screens/home/add_emission.dart';
-import 'package:impact/screens/home/charts/day_chart.dart';
 import 'package:impact/screens/home/charts/insights_chart.dart';
 import 'package:impact/screens/home/insights.dart';
 import 'package:impact/screens/shared/loading.dart';

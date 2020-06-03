@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart' as geo;
 import 'package:impact/models/distance_matrix.dart';
 import 'package:impact/models/user.dart';
-import 'package:impact/screens/home/group.dart';
+import 'package:impact/screens/home/track.dart';
 import 'package:impact/screens/home/impact.dart';
 import 'package:impact/screens/home/improve.dart';
 import 'package:impact/screens/home/insights.dart';
@@ -22,9 +22,9 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final _formKey = GlobalKey<FormState>();
   int _index = 2;
+  ScrollPhysics scroll;
   int moving = 0;
   bool popUp = false;
-  final doubleRegex = RegExp(r'\s+(\d+\.\d+)\s+', multiLine: false);
   bool isNumber(String item) {
     return '0123456789'.split('').contains(item);
   }
@@ -83,16 +83,15 @@ class _HomeState extends State<Home> {
             if (snapshot.hasData) {
               return Container(
                 decoration: backgroundGradient,
-                height: 800,
+                height: MediaQuery.of(context).size.height,
                 child: Scaffold(
                   backgroundColor: Colors.transparent,
                   body: SingleChildScrollView(
-                    child: Stack(
-                        // mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          showWidget(),
-                          popup(),
-                        ]),
+                    physics: scroll,
+                    child: Stack(children: <Widget>[
+                      showWidget(),
+                      popup(),
+                    ]),
                   ),
                   bottomNavigationBar: CupertinoTabBar(
                       currentIndex: _index,
@@ -104,7 +103,7 @@ class _HomeState extends State<Home> {
                       activeColor: Colors.white,
                       items: [
                         BottomNavigationBarItem(
-                            icon: Icon(Icons.group), title: Text('Group')),
+                            icon: Icon(Icons.gps_fixed), title: Text('Track')),
                         BottomNavigationBarItem(
                             icon: Icon(Icons.nature_people),
                             title: Text('Improve')),
@@ -130,17 +129,23 @@ class _HomeState extends State<Home> {
   Widget showWidget() {
     switch (_index) {
       case 0:
-        return Group();
+        scroll = NeverScrollableScrollPhysics();
+        return Track();
       case 1:
+        scroll = AlwaysScrollableScrollPhysics();
         return Improve();
       case 2:
+        scroll = NeverScrollableScrollPhysics();
         return Impact();
       case 3:
+        scroll = AlwaysScrollableScrollPhysics();
         return Insights();
       case 4:
+        scroll = NeverScrollableScrollPhysics();
         return Profile();
         break;
       default:
+        scroll = AlwaysScrollableScrollPhysics();
         return Impact();
     }
   }
@@ -167,9 +172,9 @@ class _HomeState extends State<Home> {
               new lat.LatLng(position.latitude, position.longitude));
           if (km2 <= 0.1) {
             DistanceMatrix route = await DistanceMatrix.loadData(
-                (lastPosition.latitude.toString() +
+                (initialPosition.latitude.toString() +
                     ',' +
-                    lastPosition.longitude.toString()),
+                    initialPosition.longitude.toString()),
                 (position.latitude.toString() +
                     ',' +
                     position.longitude.toString()));

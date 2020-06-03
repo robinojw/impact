@@ -240,6 +240,7 @@ class _AddEmissionState extends State<AddEmission> {
                           calcImpact(double.parse(_emissionType), _emissionName)
                               .toInt();
                     }
+                    _emissionType += " Miles";
                   }),
               keyboardType: TextInputType.number),
           SizedBox(height: 15),
@@ -298,7 +299,7 @@ class _AddEmissionState extends State<AddEmission> {
                     time: DateTime.now(),
                     emissionIcon: _emissionIcon,
                     emissionName: _emissionName,
-                    emissionType: (_emissionType.toString() + " Miles"),
+                    emissionType: (_emissionType.toString()),
                     ghGas: _ghGas));
 
                 await DatabaseService(uid: user.uid).updateUserData(

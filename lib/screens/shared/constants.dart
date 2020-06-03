@@ -12,3 +12,8 @@ const backgroundGradient = BoxDecoration(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         stops: [0.25, 1.5]));
+
+final iconDecoration = BoxDecoration(
+  color: const Color(0XFFe1e7f0),
+  borderRadius: BorderRadius.circular(10),
+);
