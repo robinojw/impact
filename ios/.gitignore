@@ -120,5 +120,5 @@ GoogleService-Info.plist
 android/app/build.gradle
 android/app/release/
 ios/Runner/AppDelegate.swift
-lib/screens/home/group.dart
-group.dart
+lib/screens/home/track.dart
+track.dart
