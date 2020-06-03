@@ -37,15 +37,15 @@ lib/generated_plugin_registrant.dart
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 ios/Runner/AppDelegate.swift
-*lib/screens/home/group.dart
+*lib/screens/home/track.dart
 
-group.dart
+track.dart
 AppDelegate.swift
 google-services.json
 GoogleService-Info.plist
 distance_matrix.dart
-lib/screens/home/group.dart
+lib/screens/home/track.dart
 AndroidManifest.xml
 ios/Runnner/AppDelegate.swift
 appdelegate.swift
-home/group.dart
+home/track.dart
